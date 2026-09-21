@@ -14,7 +14,7 @@ class LLMProvider:
     def __init__(self, config: Dict = None):
         self.config = config or get_llm_config()
         self.provider = self.config.get("provider","mock")
-        self.model = self.config.get("model","gemini-2.5-flash")
+        self.model = self.config.get("model","gemini-3.6-flash")
         self.temperature = self.config.get("temperature",0.1)
         self.max_tokens = self.config.get("max_tokens",512)
         self.client = None
@@ -130,7 +130,7 @@ Answer:"""
         try:
             extra = {}
             # Gemini 2.5 Flash "thinks" by default and thinking tokens eat max_tokens, truncating answers
-            if self.provider == "gemini" and "flash" in self.model:
+            if self.provider == "gemini" and "2.5-flash" in self.model:
                 extra["reasoning_effort"] = "none"
             response = self.client.chat.completions.create(
                 model=self.model,
