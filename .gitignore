@@ -1,0 +1,45 @@
+# Env
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+.next/
+out/
+.turbo/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Models & caches
+.cache/
+*.bin
+*.pt
+models/
+*.faiss
+*.npy
+
+# Logs
+*.log
+logs/
+
+# Keep results but ignore temp
+results/*.tmp
+results/cache/
+
+# IDE
+.vscode/
+.idea/

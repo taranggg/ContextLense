@@ -1,0 +1,627 @@
+[
+  {
+    "question_id": "Q001",
+    "question": "In which year was IIT Roorkee formally designated as an IIT?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.60",
+    "answer": "Based on retrieved documents: Introduction Indian Institute of Technology Roorkee (IIT Roorkee) has a rich legacy spanning178 years, and it is among the oldest engineering institutions in India. On September 21, 2001, it was formally designated as an Indian Institute of Technology through a Government of India ordinance, becoming the seventh IIT and earning the status of an Institutionof National Importance. Since its inception, IIT Roorkee has played a pivotal role in shaping the future of technology, engineering, and research in the country. Over the years, the Institute has expanded its reach beyond science and technology, making significant contributions to Architecture, Management, Design and the Humanities &Social Sciences. Today, IIT Roorkee continues to set higher benchmarks in education and it offers undergraduate programs in... [PhD_IB_A2026.pdf, p. 3] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "Introduction Indian Institute of Technology Roorkee (IIT Roorkee) has a rich legacy spanning178 years, and it is among the oldest engineering institutions in India. On September 21, 2001, it was formally designated as an Indian Institute of Technology through a Government of India ordinance, becomin",
+      "For further information, please contact: (message only during working hours) Official Website: www.iitr .ac.in “IIT Roorkee is committed to nurture and promote diversity and inclusion” For selection criteria and program rlated queries 6395059674 FOR ADMISSION PROCESS AND APPLICATION PORTAL RELATED Q",
+      "All the mandatory documents mentioned in 5.2.2 including final results/provisional degree should be submitted at the time of online Admission Registration or on the last date mentioned for the same in the academic calendar of the Autumn Semester 2026-27. Information to this effect will be available ",
+      "a) The candidates are advised to read each and every instruction given in this Information Brochure very carefully before applying Online. b) All entries should be carefully made while applying online. IIT Roorkee will not be responsible for wrong entries. Candidates shall be sole responsible for th",
+      "Admission to various Postgraduate (PG) academic programmes of the Institute is open to all Indian candidates irrespective of caste, creed and sex. All foreign candidates are requested to visit the website of International Relations, IIT Roorkee https://ir.iitr.ac.in/ for relevant information towards",
+      "1.1 Introduction to Postgraduate Academic Programmes 1.2 Dual Degree Programme The M.Tech./M.Arch./MURP candidates pursuing PG degree in any Department/Centre/School of IITR are permitted to switch over to Ph.D. Programme after 1st year subject to satisfying eligibility criteria as per applicable ru",
+      "Ragging Contact Details Ragging is banned in the Institute and anyone indulging in ragging is likely to be punished appropriately and the punishment may include expulsion from the institution, suspension from the institution or classes for a limited period, or fine with a public apology. The punishm",
+      "Note: 1. The candidates working in Institute / University awarding PG degree itself are not eligible for admission as part-time or full-time candidate, except QIP candidates. 2. Candidates admitted under R&T and PGT Schemes whose selection are made by Defence Head Quarters, are also required to appl",
+      "B. Steps to be followed Candidatesmust followthefollowingstepswhilefillingtheonlineApplicationForm: Candidates are requested to applyonline only. Hard copy of the application need not be submitted. Physical applicationwill not be considered. Candidates may download their online submitted application",
+      "(iii) In-service External Research Scholar (ISERS) At the time of academic registration, the candidates should have experience of at least two years in a Government / Semi-Government organization / Public Sector Undertaking / AICTE / UGC recognized educational institute, or in a registered company w"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 0.5555555555555556
+      },
+      "5": {
+        "relevance": 0.4666666666666667
+      },
+      "10": {
+        "relevance": 0.6
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q010",
+    "question": "What is the duration of part-time sponsored M.Tech programme?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.60",
+    "answer": "Based on retrieved documents: Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to M.Tech. courses. For International Candidates Candidates holding a bachelor’s degree or equivalent in Engineering/Technology/Architecture/Planning/ Design and meeting the minimum educational qualifications are eligible to seek admission to M.Tech/M.Arch./MURP programmes. 3.1 Full-Time Sponsored Candidates These candidates must have a minimum of two years of full-time work experience till the last date of submission of application form in responsible capacity in a Registered Firm/ Company/ Industry/ Educational and Research Institution/Govt./Quasi Govt./Autonomous Organization in the relevant... [Information_Brochure_2026.pdf, p. 5] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to",
+      "3.2. Part-Time Sponsored Candidates (Three years duration) a) These candidates must satisfy condition specified at 3.1 as for full-time sponsored candidates, with the additional requirement that such organizations must be located either at Roorkee or within a radius of 20 km from Roorkee. b) There w",
+      "1.1 Introduction to Postgraduate Academic Programmes 1.2 Dual Degree Programme The M.Tech./M.Arch./MURP candidates pursuing PG degree in any Department/Centre/School of IITR are permitted to switch over to Ph.D. Programme after 1st year subject to satisfying eligibility criteria as per applicable ru",
+      "Postgraduate Programmes 1.1 Introduction to PG Academic Programmes 1.2 Dual Degree Programme Admission Categories Eligibility Requirements for Admission to M.Tech./M.Arch./MURP Degree Programmes 3.1 Full-Time Sponsored Candidates 3.2 Part-Time Sponsored Candidates (Three years duration) Important Da",
+      "5.5 TCS Research Scholar Program This fellowship aims to call for quality multidisciplinary research activities in areas ranging from computer engineering and science, information systems and technology, software engineering, and other disciplines which utilize computing. Scholarship Details: Period",
+      "Admission Categories For Indian Candidates The candidates holding a four-year bachelor’s degree or equivalent and meeting the minimum educational qualifications as given in Table-1 are eligible to seek admission to M.Tech./M.Arch./MURP programmes. In addition, candidates of General, Gen-EWS and OBC ",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) 5 Chemistry  Analytical Chemistry  Inorganic Chemistry  Materials Chemistry  Organic Chemistry  Physical Chemistry (i) M.Sc. or equivalent degree in Chemistry / Physics / Applied Chemistry / Industrial Chemistry / Pharmace",
+      "S. No. Centre Specialization Minimum Educational Qualification (MEQ) Centre of Excellence in Disaster Mitigation & Management  Disaster Mitigation & Management (i) M. Tech. in Disaster Mitigation and Management, Civil Engineering, Geomatics Engineering, Mechanical and Industrial Engineering, Chemic",
+      "5.6 Visvesvaraya Ph.D. Scheme Visvesvaraya Ph.D. Scheme for Electronics & IT of Digital India Corporation, Ministry of Electronics & Information Technology (MeitY), Government of India was initiated in the year 2014 withan objectivetoenhancenumber ofPh.D.sin thecountry. Under this scheme, Ph.D. seat",
+      "No. School Specialization Minimum Educational Qualification (MEQ) Mehta Family School of Data Science and Artificial Intelligence  Data Mining and Big Data Analytics  Machine Learning and Deep Learning  Image and Video Analytics  Natural Language Processing  Soft Computing  Mathematical Method"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 1.0
+      },
+      "5": {
+        "relevance": 0.8666666666666667
+      },
+      "10": {
+        "relevance": 0.6
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q011",
+    "question": "Can M.Tech students switch to PhD programme after first year at IIT Roorkee?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.63",
+    "answer": "Based on retrieved documents: 1.1 Introduction to Postgraduate Academic Programmes 1.2 Dual Degree Programme The M.Tech./M.Arch./MURP candidates pursuing PG degree in any Department/Centre/School of IITR are permitted to switch over to Ph.D. Programme after 1st year subject to satisfying eligibility criteria as per applicable rules. IIT Roorkee offers 57 full time postgraduate programmes in various disciplines of Engineering, Architecture and Planning, Sciences, Management and Design. In addition, the departments of Hydrology and Water Resources Development and Management, also offer PG Diploma programmes. Details of M.Arch./ M.Tech./ M.U.R.P. programmes available in different departments along with their codes, minimum educational qualifications for admission are given in Table-1. The curriculum structure of these is given on the Institute website: www.iitr.ac.in The regulations in force determine the general... [Information_Brochure_2026.pdf, p. 3] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "1.1 Introduction to Postgraduate Academic Programmes 1.2 Dual Degree Programme The M.Tech./M.Arch./MURP candidates pursuing PG degree in any Department/Centre/School of IITR are permitted to switch over to Ph.D. Programme after 1st year subject to satisfying eligibility criteria as per applicable ru",
+      "All the mandatory documents mentioned in 5.2.2 including final results/provisional degree should be submitted at the time of online Admission Registration or on the last date mentioned for the same in the academic calendar of the Autumn Semester 2026-27. Information to this effect will be available ",
+      "Introduction Indian Institute of Technology Roorkee (IIT Roorkee) has a rich legacy spanning178 years, and it is among the oldest engineering institutions in India. On September 21, 2001, it was formally designated as an Indian Institute of Technology through a Government of India ordinance, becomin",
+      "Contents 1. Introduction 2 1.1 Location 1.2 Campus 2. About Doctoral Research 3 3. Important Dates 4 4. Ph.D. Admission Requirements 4 4.1 Common Minimum Eligibility Criteria for Ph.D. Admission 4.2 Minimum Educational Qualification For Admission to Ph.D. Programme in Different Departments/ Centres/",
+      "For further information, please contact: (message only during working hours) Official Website: www.iitr .ac.in “IIT Roorkee is committed to nurture and promote diversity and inclusion” For selection criteria and program rlated queries 6395059674 FOR ADMISSION PROCESS AND APPLICATION PORTAL RELATED Q",
+      "4.2 Minimum Educational Qualification (MEQ) and Area of Specialization for Admission to Ph.D. Programme in Different Departments /Centres/School A. ROORKEE CAMPUS • Final year students who will be completing all the requirements of their qualifying examination including backpaper(s)/supplementary(ie",
+      "(iii) In-service External Research Scholar (ISERS) At the time of academic registration, the candidates should have experience of at least two years in a Government / Semi-Government organization / Public Sector Undertaking / AICTE / UGC recognized educational institute, or in a registered company w",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) 5 Chemistry  Analytical Chemistry  Inorganic Chemistry  Materials Chemistry  Organic Chemistry  Physical Chemistry (i) M.Sc. or equivalent degree in Chemistry / Physics / Applied Chemistry / Industrial Chemistry / Pharmace",
+      "a. A candidate seeking admission to postgraduate programmes leading to M.Tech./M.Arch./M.U.R.P. degree is allowed to give prioritized preference for a maximum of 14 academic programmes given in Table-1. Choices (max. 14) once filled-in in the Application Form shall not be changed/corrected/modified ",
+      "4.4.2. SAKUNTALA (Scheme for Aspirants of Knowledge UNder TALentAdvancement) Fellowship Any female candidate having B.Tech./B.E./B.Arch./B.Des. degree from the Ministry of Education funded Technical Institutions (erstwhile CFTIs of MoE) with CGPA ≥8.5 in the 10-point scale will be eligible for admis"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 0.6666666666666666
+      },
+      "5": {
+        "relevance": 0.6
+      },
+      "10": {
+        "relevance": 0.6333333333333333
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q013",
+    "question": "What is MURP in the context of IIT Roorkee PG programmes?",
+    "failure_type": "Hallucination increased with more context",
+    "k": 10,
+    "observed": "Hallucination K=1 0.00 vs K=10 0.50",
+    "answer_k1": "Based on retrieved documents: Postgraduate Programmes 1.1 Introduction to PG Academic Programmes 1.2 Dual Degree Programme Admission Categories Eligibility Requirements for Admission to M.Tech./M.Arch./MURP Degree Programmes 3.1 Full-Time Sponsored Candidates 3.2 Part-Time Sponsored Candidates (Three years duration) Important Dates Admission Procedure 5.1 General Information 5.2 Details of online application submission 5.2.1 How to Apply 5.2.2 Documents to be uploaded 5.2.3 Application fee (non-refundable) Selection And Admission 6.1 Basis of Selection for Admission 6.2 Fee Structure 6.3 Academic Registration 6.4 Cancellation of Admission/Programme 6.5 Matters of Dispute 6.6 Ragging Important Instructions Annexures 1-2... [Information_Brochure_2026.pdf, p. 2]",
+    "answer_k10": "Based on retrieved documents: Postgraduate Programmes 1.1 Introduction to PG Academic Programmes 1.2 Dual Degree Programme Admission Categories Eligibility Requirements for Admission to M.Tech./M.Arch./MURP Degree Programmes 3.1 Full-Time Sponsored Candidates 3.2 Part-Time Sponsored Candidates (Three years duration) Important Dates Admission Procedure 5.1 General Information 5.2 Details of online application submission 5.2.1 How to Apply 5.2.2 Documents to be uploaded 5.2.3 Application fee (non-refundable) Selection And Admission 6.1 Basis of Selection for Admission 6.2 Fee Structure 6.3 Academic Registration 6.4 Cancellation of Admission/Programme 6.5 Matters of Dispute 6.6 Ragging Important Instructions Annexures 1-2... [Information_Brochure_2026.pdf, p. 2] Additional context from 9 other chunks supports this.",
+    "metrics": {
+      "1": {
+        "hallucination": 0.0
+      },
+      "3": {
+        "hallucination": 0.5
+      },
+      "5": {
+        "hallucination": 0.5
+      },
+      "10": {
+        "hallucination": 0.5
+      }
+    },
+    "explanation": "More context led to higher hallucination rate, possibly due to contradictory passages or LLM confusion."
+  },
+  {
+    "question_id": "Q014",
+    "question": "What is the full form of AMIE mentioned in M.Tech eligibility?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.47",
+    "answer": "Based on retrieved documents: Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to M.Tech. courses. For International Candidates Candidates holding a bachelor’s degree or equivalent in Engineering/Technology/Architecture/Planning/ Design and meeting the minimum educational qualifications are eligible to seek admission to M.Tech/M.Arch./MURP programmes. 3.1 Full-Time Sponsored Candidates These candidates must have a minimum of two years of full-time work experience till the last date of submission of application form in responsible capacity in a Registered Firm/ Company/ Industry/ Educational and Research Institution/Govt./Quasi Govt./Autonomous Organization in the relevant... [Information_Brochure_2026.pdf, p. 5] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to",
+      "S.NO. Department/Centre/ School & Code Academic Programme Minimum Educational Qualification Code Name 6 Electrical Engineering (EED) 25 M.Tech. Electric Drives & Power Electronics Bachelor’s degree in Electrical Engineering or its equivalent in relevant discipline. M.Tech. Advanced Instrumentation a",
+      "S. No. Centre Specialization Minimum Educational Qualification (MEQ) Centre for Nanotechnology  Nanotechnology (i) B.E. / B.Tech. or M.E. / M.Tech. in Nanotechnology / Metallurgy / Chemical / Polymer / Mechanical / Biotechnology / Engineering Physics / Engineering Chemistry / Electronics / Electric",
+      "S. No. Centre Specialization Minimum Educational Qualification (MEQ) Centre of Excellence in Disaster Mitigation & Management  Disaster Mitigation & Management (i) M. Tech. in Disaster Mitigation and Management, Civil Engineering, Geomatics Engineering, Mechanical and Industrial Engineering, Chemic",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Electronics and Communication Engineering  Communication, Network & Signal Processing  Microelectronics & VLSI  RF & Microwaves  Terahertz Communication and Sensing  Smart Electronic Systems & Sensors (i) M.E. / M.Tech. in",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Hydro and Renewable Energy  Hydro Power  Renewable Energy  Solar Energy  Hybrid Energy Systems and Storage  Environmental Management of Water Bodies (i) B.Tech. / M. Tech. or equivalent in Civil / Electrical / Mechanical /",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) 5 Chemistry  Analytical Chemistry  Inorganic Chemistry  Materials Chemistry  Organic Chemistry  Physical Chemistry (i) M.Sc. or equivalent degree in Chemistry / Physics / Applied Chemistry / Industrial Chemistry / Pharmace",
+      "S.NO. Department/Centre/ School & Code Academic Programme Minimum Educational Qualification Code Name 9 Hydrology (HYD) 33 M.Tech. Hydrology Bachelor’s degree in Civil/ Agricultural Engineering Hydrology/ Geomatics Engineering/ Data Science & Artificial Intelligence/ Environmental Engineering or equ",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Water Resources Development & Management  Water Resource Development and Management (i) B.E. /B. Tech. /M.E. /M.Tech. in Civil /Agricultural / Environment / Electrical/ Mechanical /Chemical / Computer/ Electronics Engineering ",
+      "No. School Specialization Minimum Educational Qualification (MEQ) Mehta Family School of Data Science and Artificial Intelligence  Data Mining and Big Data Analytics  Machine Learning and Deep Learning  Image and Video Analytics  Natural Language Processing  Soft Computing  Mathematical Method"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 0.5555555555555556
+      },
+      "5": {
+        "relevance": 0.4666666666666667
+      },
+      "10": {
+        "relevance": 0.4666666666666667
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q016",
+    "question": "How to apply for PG programmes at IIT Roorkee?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 1,
+    "observed": "Relevance 1.00 but Accuracy 0.00 at K=1",
+    "answer": "Based on retrieved documents: Note: 1. The candidates working in Institute / University awarding PG degree itself are not eligible for admission as part-time or full-time candidate, except QIP candidates. 2. Candidates admitted under R&T and PGT Schemes whose selection are made by Defence Head Quarters, are also required to apply online at IIT Roorkee. 3. Candidates with or without GATE can apply. Preference will be given to GATE qualified candidates. 4. No self-sponsored candidate will be admitted . 5. Sponsored students will not be eligible for any scholarship, prize etc.... [Information_Brochure_2026.pdf, p. 7]",
+    "retrieved_context": [
+      "Note: 1. The candidates working in Institute / University awarding PG degree itself are not eligible for admission as part-time or full-time candidate, except QIP candidates. 2. Candidates admitted under R&T and PGT Schemes whose selection are made by Defence Head Quarters, are also required to appl"
+    ],
+    "metrics": {
+      "relevance": 1.0,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q017",
+    "question": "What are the steps for PhD application submission?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.57",
+    "answer": "Based on retrieved documents: f. Applications will be scrutinized, relevant documents checked / verified for their authenticity. Candidates are requested to check the information sent by the institute and do the needful, if required. The institute shall not hold the responsibility for the failure of the candidates in timely checking the emails/doing the needful. g. All the candidates are requested to mention their operational e-mail ids and contact numbers in the online application form. h. A candidate shall submit only one application with maximum 14 different programmes as per their choices. i. Choices (max. 14) once given shall not be changed at any stage for any reason after submission of Online application form). j. After submitting the Application, admission related enquiries may be made... [Information_Brochure_2026.pdf, p. 21] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "f. Applications will be scrutinized, relevant documents checked / verified for their authenticity. Candidates are requested to check the information sent by the institute and do the needful, if required. The institute shall not hold the responsibility for the failure of the candidates in timely chec",
+      "For admission to Ph.D. programmes in Autumn Semester of the session 2026-27, candidates need to register and fill the application ONLINE only by accessing the website [link] on or before20th April, 2026. A. Documents Before applying online, candidates are required to keep the following documents rea",
+      "B. Steps to be followed Candidatesmust followthefollowingstepswhilefillingtheonlineApplicationForm: Candidates are requested to applyonline only. Hard copy of the application need not be submitted. Physical applicationwill not be considered. Candidates may download their online submitted application",
+      "Persons with Different Abilities (PwD) candidates must upload the UDID card along with the Application. However, such a candidate shall have to appear before a Medical Board duly constituted by IIT Roorkee for this purpose, if needed. The Medical Board will decide the programmes which cannot be offe",
+      "Selection process is purely based on merit. Stipulated dates for a written test and/ or interview shall be communicated by the concerned Departments/Centres/ School to the shortlisted candidates. Simultaneously, the dates shall be uploaded in the portal of eachDepartment/Centre/School. The prescribe",
+      "4.2 Minimum Educational Qualification (MEQ) and Area of Specialization for Admission to Ph.D. Programme in Different Departments /Centres/School A. ROORKEE CAMPUS • Final year students who will be completing all the requirements of their qualifying examination including backpaper(s)/supplementary(ie",
+      "5.2.2 Documents to be Uploaded Before applying, candidates are advised to keep ready the scanned copies of following testimonials for uploading (Maximum size of each document : 5 MB): 1. Applicant Photo (In JPG) 2. Applicant Signature (In JPG) 3. 10th Marksheet/ Certificate (in pdf) 4. 12th/Diploma ",
+      "a) The candidates are advised to read each and every instruction given in this Information Brochure very carefully before applying Online. b) All entries should be carefully made while applying online. IIT Roorkee will not be responsible for wrong entries. Candidates shall be sole responsible for th",
+      "Contents 1. Introduction 2 1.1 Location 1.2 Campus 2. About Doctoral Research 3 3. Important Dates 4 4. Ph.D. Admission Requirements 4 4.1 Common Minimum Eligibility Criteria for Ph.D. Admission 4.2 Minimum Educational Qualification For Admission to Ph.D. Programme in Different Departments/ Centres/",
+      "6.1 Basis of Selection for Admission Offer letter shall be issued by Academic Affairs Office, IIT Roorkee. The Institute fee structure is available on: https://iitr .ac.in/Academics/Institute%20Fees.html Revised fee structure if any, will reflect automatically. 6.3 Academic Registration A system of "
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 0.7777777777777778
+      },
+      "5": {
+        "relevance": 0.8666666666666667
+      },
+      "10": {
+        "relevance": 0.5666666666666667
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q017",
+    "question": "What are the steps for PhD application submission?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 1,
+    "observed": "Relevance 1.00 but Accuracy 0.00 at K=1",
+    "answer": "Based on retrieved documents: f. Applications will be scrutinized, relevant documents checked / verified for their authenticity. Candidates are requested to check the information sent by the institute and do the needful, if required. The institute shall not hold the responsibility for the failure of the candidates in timely checking the emails/doing the needful. g. All the candidates are requested to mention their operational e-mail ids and contact numbers in the online application form. h. A candidate shall submit only one application with maximum 14 different programmes as per their choices. i. Choices (max. 14) once given shall not be changed at any stage for any reason after submission of Online application form). j. After submitting the Application, admission related enquiries may be made... [Information_Brochure_2026.pdf, p. 21]",
+    "retrieved_context": [
+      "f. Applications will be scrutinized, relevant documents checked / verified for their authenticity. Candidates are requested to check the information sent by the institute and do the needful, if required. The institute shall not hold the responsibility for the failure of the candidates in timely chec"
+    ],
+    "metrics": {
+      "relevance": 1.0,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q018",
+    "question": "What documents are required to be uploaded for M.Tech application?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 3,
+    "observed": "Relevance 0.89 but Accuracy 0.00 at K=3",
+    "answer": "Based on retrieved documents: For admission to Ph.D. programmes in Autumn Semester of the session 2026-27, candidates need to register and fill the application ONLINE only by accessing the website [link] on or before20th April, 2026. A. Documents Before applying online, candidates are required to keep the following documents ready for uploading: S. No. Particulars Size Instructions for Online Application & Others Up to 500 KB Upto 500 KB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB 1. Colour photograph (only in JPEG) 2. Signature (only in JPEG) 3. Gen-EWS/OBC-NCL/SC/ST/ UDID Card (PDF)(as applicable) 4. 10th Certificate/Marksheet(in single PDF) 5. 12t h Certificate/Diploma and Marksheet... [PhD_IB_A2026.pdf, p. 31] Additional context from 2 other chunks supports this.",
+    "retrieved_context": [
+      "For admission to Ph.D. programmes in Autumn Semester of the session 2026-27, candidates need to register and fill the application ONLINE only by accessing the website [link] on or before20th April, 2026. A. Documents Before applying online, candidates are required to keep the following documents rea",
+      "5.2.2 Documents to be Uploaded Before applying, candidates are advised to keep ready the scanned copies of following testimonials for uploading (Maximum size of each document : 5 MB): 1. Applicant Photo (In JPG) 2. Applicant Signature (In JPG) 3. 10th Marksheet/ Certificate (in pdf) 4. 12th/Diploma ",
+      "Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to"
+    ],
+    "metrics": {
+      "relevance": 0.8888888888888888,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q019",
+    "question": "How is selection for PhD done at IIT Roorkee?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 1,
+    "observed": "Relevance 1.00 but Accuracy 0.00 at K=1",
+    "answer": "Based on retrieved documents: For further information, please contact: (message only during working hours) Official Website: www.iitr .ac.in “IIT Roorkee is committed to nurture and promote diversity and inclusion” For selection criteria and program rlated queries 6395059674 FOR ADMISSION PROCESS AND APPLICATION PORTAL RELATED QUERIES Academic Affairs Office (Admissions) Indian Institute of Technology Roorkee ROORKEE-247 667 (Uttarakhand) Email: pgadmission@iitr .ac.in FOR SELECTION CRITERIA AND PROGRAM RELATED QUERIES Please go through the webpage of respective Department/ Centre/ School. Link for webpages are available at: www.iitr .ac.in... [Information_Brochure_2026.pdf, p. 23]",
+    "retrieved_context": [
+      "For further information, please contact: (message only during working hours) Official Website: www.iitr .ac.in “IIT Roorkee is committed to nurture and promote diversity and inclusion” For selection criteria and program rlated queries 6395059674 FOR ADMISSION PROCESS AND APPLICATION PORTAL RELATED Q"
+    ],
+    "metrics": {
+      "relevance": 1.0,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q020",
+    "question": "What is the procedure for sponsored candidates to get admission?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 1,
+    "observed": "Relevance 1.00 but Accuracy 0.00 at K=1",
+    "answer": "Based on retrieved documents: f. Applications will be scrutinized, relevant documents checked / verified for their authenticity. Candidates are requested to check the information sent by the institute and do the needful, if required. The institute shall not hold the responsibility for the failure of the candidates in timely checking the emails/doing the needful. g. All the candidates are requested to mention their operational e-mail ids and contact numbers in the online application form. h. A candidate shall submit only one application with maximum 14 different programmes as per their choices. i. Choices (max. 14) once given shall not be changed at any stage for any reason after submission of Online application form). j. After submitting the Application, admission related enquiries may be made... [Information_Brochure_2026.pdf, p. 21]",
+    "retrieved_context": [
+      "f. Applications will be scrutinized, relevant documents checked / verified for their authenticity. Candidates are requested to check the information sent by the institute and do the needful, if required. The institute shall not hold the responsibility for the failure of the candidates in timely chec"
+    ],
+    "metrics": {
+      "relevance": 1.0,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q024",
+    "question": "What is the procedure for part-time PhD research scholars?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 3,
+    "observed": "Relevance 0.89 but Accuracy 0.00 at K=3",
+    "answer": "Based on retrieved documents: 5.2 Joint Doctoral Degree Programme with Universities outside India 5.3 Continuation of Fellowship during ResearchVisit Ph.D. students can continue to avail their fellowship for a maximum period of six months during their Ph.D. program while on a research visit to other Research Universities/ Institution/ ResearchLabs etc.,in addition to other funding support,ifany. 5.4 Prime Minister’s Research Fellowship (PMRF) Ph.D. students may get opportunity to apply for the prestigious Prime Minister’s Research Fellowship program, through two channels, viz. Direct entry and Lateral entry [subject to implementation by Ministry of Education, Govt. of India]. Students are strongly encouraged and supported to develop their research proposals for the purpose. For more details,please visit the [link] PhD students, in consultation with their supervisors, have options... [PhD_IB_A2026.pdf, p. 27] Additional context from 2 other chunks supports this.",
+    "retrieved_context": [
+      "5.2 Joint Doctoral Degree Programme with Universities outside India 5.3 Continuation of Fellowship during ResearchVisit Ph.D. students can continue to avail their fellowship for a maximum period of six months during their Ph.D. program while on a research visit to other Research Universities/ Instit",
+      "Contents 1. Introduction 2 1.1 Location 1.2 Campus 2. About Doctoral Research 3 3. Important Dates 4 4. Ph.D. Admission Requirements 4 4.1 Common Minimum Eligibility Criteria for Ph.D. Admission 4.2 Minimum Educational Qualification For Admission to Ph.D. Programme in Different Departments/ Centres/",
+      "5.5 TCS Research Scholar Program This fellowship aims to call for quality multidisciplinary research activities in areas ranging from computer engineering and science, information systems and technology, software engineering, and other disciplines which utilize computing. Scholarship Details: Period"
+    ],
+    "metrics": {
+      "relevance": 0.8888888888888888,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q025",
+    "question": "How to pay application fee for PG admission?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 1,
+    "observed": "Relevance 1.00 but Accuracy 0.00 at K=1",
+    "answer": "Based on retrieved documents: Postgraduate Programmes 1.1 Introduction to PG Academic Programmes 1.2 Dual Degree Programme Admission Categories Eligibility Requirements for Admission to M.Tech./M.Arch./MURP Degree Programmes 3.1 Full-Time Sponsored Candidates 3.2 Part-Time Sponsored Candidates (Three years duration) Important Dates Admission Procedure 5.1 General Information 5.2 Details of online application submission 5.2.1 How to Apply 5.2.2 Documents to be uploaded 5.2.3 Application fee (non-refundable) Selection And Admission 6.1 Basis of Selection for Admission 6.2 Fee Structure 6.3 Academic Registration 6.4 Cancellation of Admission/Programme 6.5 Matters of Dispute 6.6 Ragging Important Instructions Annexures 1-2... [Information_Brochure_2026.pdf, p. 2]",
+    "retrieved_context": [
+      "Postgraduate Programmes 1.1 Introduction to PG Academic Programmes 1.2 Dual Degree Programme Admission Categories Eligibility Requirements for Admission to M.Tech./M.Arch./MURP Degree Programmes 3.1 Full-Time Sponsored Candidates 3.2 Part-Time Sponsored Candidates (Three years duration) Important Da"
+    ],
+    "metrics": {
+      "relevance": 1.0,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q029",
+    "question": "What work experience is required for full-time sponsored M.Tech candidates?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.50",
+    "answer": "Based on retrieved documents: Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to M.Tech. courses. For International Candidates Candidates holding a bachelor’s degree or equivalent in Engineering/Technology/Architecture/Planning/ Design and meeting the minimum educational qualifications are eligible to seek admission to M.Tech/M.Arch./MURP programmes. 3.1 Full-Time Sponsored Candidates These candidates must have a minimum of two years of full-time work experience till the last date of submission of application form in responsible capacity in a Registered Firm/ Company/ Industry/ Educational and Research Institution/Govt./Quasi Govt./Autonomous Organization in the relevant... [Information_Brochure_2026.pdf, p. 5] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) 5 Chemistry  Analytical Chemistry  Inorganic Chemistry  Materials Chemistry  Organic Chemistry  Physical Chemistry (i) M.Sc. or equivalent degree in Chemistry / Physics / Applied Chemistry / Industrial Chemistry / Pharmace",
+      "Admission Categories For Indian Candidates The candidates holding a four-year bachelor’s degree or equivalent and meeting the minimum educational qualifications as given in Table-1 are eligible to seek admission to M.Tech./M.Arch./MURP programmes. In addition, candidates of General, Gen-EWS and OBC ",
+      "No. School Specialization Minimum Educational Qualification (MEQ) Mehta Family School of Data Science and Artificial Intelligence  Data Mining and Big Data Analytics  Machine Learning and Deep Learning  Image and Video Analytics  Natural Language Processing  Soft Computing  Mathematical Method",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Hydro and Renewable Energy  Hydro Power  Renewable Energy  Solar Energy  Hybrid Energy Systems and Storage  Environmental Management of Water Bodies (i) B.Tech. / M. Tech. or equivalent in Civil / Electrical / Mechanical /",
+      "S.NO. Department/Centre/ School & Code Academic Programme Minimum Educational Qualification Code Name 16 Disaster Mitigation and Management (DMC) 49 M.Tech. Disaster Mitigation and Management B.Tech. (Civil, Structural, Mechanical, Industrial, Chemical Engineering and Biotechnology /Computer Science",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Metallurgical and Materials Engineering  Metallurgical and Materials Engineering (i) B.Tech./ M.Tech. degree in Metallurgy / Materials Science and Engineering/ Ceramic Engineering/ Polymer Engineering or equivalent. (OR) (ii) ",
+      "S. No. Centre Specialization Minimum Educational Qualification (MEQ) Centre of Excellence in Disaster Mitigation & Management  Disaster Mitigation & Management (i) M. Tech. in Disaster Mitigation and Management, Civil Engineering, Geomatics Engineering, Mechanical and Industrial Engineering, Chemic",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Electrical Engineering  Instrumentation and Signal Processing  Power Electronics and Electric Drive  Power System Engineering  System and Control (i) B.Tech. / M.Tech. or equivalent degree in Electrical Engineering (OR) (ii",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Electronics and Communication Engineering  Communication, Network & Signal Processing  Microelectronics & VLSI  RF & Microwaves  Terahertz Communication and Sensing  Smart Electronic Systems & Sensors (i) M.E. / M.Tech. in"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 0.6666666666666666
+      },
+      "5": {
+        "relevance": 0.5333333333333333
+      },
+      "10": {
+        "relevance": 0.5
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q033",
+    "question": "What is the minimum CGPA required for General category for PhD?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 1,
+    "observed": "Relevance 1.00 but Accuracy 0.00 at K=1",
+    "answer": "Based on retrieved documents: 3. Applicants of all categories (GEN/GEN-EWS/OBC/SC/ST/PWD) with 4-Year Bachelor’s degree from institutions other than the Ministry of Education funded Technical Institutions (erstwhile CFTIs of MoE) having a minimum CGPA of 7.50 on a 10-point scale or 75% marks and Qualified a national level test, such as GATE / CEED / JEST / UGC-NET / CSIR-NET including lectureship (Assistant Professorship)/Ph.D.Only or equivalentor holding anationallevelfellowship 4. Applicants of all categories (GEN/GEN-EWS/OBC/SC/ST/PWD) with Bachelor’s or Master’s degree from IITs with a CGPA of 8.0 and above on a 10-point scale. Such candidates are exempted from the requirement of qualifying in a national level test, such as- GATE / CEED / JEST / UGC-NET / CSIR-NET including lectureship (Assistant Professorship)/ Ph.D. Only or equivalent... [PhD_IB_A2026.pdf, p. 6]",
+    "retrieved_context": [
+      "3. Applicants of all categories (GEN/GEN-EWS/OBC/SC/ST/PWD) with 4-Year Bachelor’s degree from institutions other than the Ministry of Education funded Technical Institutions (erstwhile CFTIs of MoE) having a minimum CGPA of 7.50 on a 10-point scale or 75% marks and Qualified a national level test, "
+    ],
+    "metrics": {
+      "relevance": 1.0,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q034",
+    "question": "Is GATE required for sponsored M.Tech candidates?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 1,
+    "observed": "Relevance 1.00 but Accuracy 0.00 at K=1",
+    "answer": "Based on retrieved documents: Note: 1. The candidates working in Institute / University awarding PG degree itself are not eligible for admission as part-time or full-time candidate, except QIP candidates. 2. Candidates admitted under R&T and PGT Schemes whose selection are made by Defence Head Quarters, are also required to apply online at IIT Roorkee. 3. Candidates with or without GATE can apply. Preference will be given to GATE qualified candidates. 4. No self-sponsored candidate will be admitted . 5. Sponsored students will not be eligible for any scholarship, prize etc.... [Information_Brochure_2026.pdf, p. 7]",
+    "retrieved_context": [
+      "Note: 1. The candidates working in Institute / University awarding PG degree itself are not eligible for admission as part-time or full-time candidate, except QIP candidates. 2. Candidates admitted under R&T and PGT Schemes whose selection are made by Defence Head Quarters, are also required to appl"
+    ],
+    "metrics": {
+      "relevance": 1.0,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q035",
+    "question": "What is the age limit for PhD admission at IIT Roorkee?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 1,
+    "observed": "Relevance 1.00 but Accuracy 0.00 at K=1",
+    "answer": "Based on retrieved documents: All the mandatory documents mentioned in 5.2.2 including final results/provisional degree should be submitted at the time of online Admission Registration or on the last date mentioned for the same in the academic calendar of the Autumn Semester 2026-27. Information to this effect will be available in the IIT Roorkee website. Failure to produce these documents will lead to cancellation of admission without any further notice. After admission, a student may be allowed to register for the next semester if he/she has cleared not less than 75% of course credits registered in that semester, and has secured a SGPA of not less than 5.0 at the end of the first semester, and a CGPA of not less than 5.0 at... [Information_Brochure_2026.pdf, p. 22]",
+    "retrieved_context": [
+      "All the mandatory documents mentioned in 5.2.2 including final results/provisional degree should be submitted at the time of online Admission Registration or on the last date mentioned for the same in the academic calendar of the Autumn Semester 2026-27. Information to this effect will be available "
+    ],
+    "metrics": {
+      "relevance": 1.0,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q036",
+    "question": "If a candidate has 58% in qualifying degree and belongs to General category, is he eligible for M.Tech?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.57",
+    "answer": "Based on retrieved documents: Admission Categories For Indian Candidates The candidates holding a four-year bachelor’s degree or equivalent and meeting the minimum educational qualifications as given in Table-1 are eligible to seek admission to M.Tech./M.Arch./MURP programmes. In addition, candidates of General, Gen-EWS and OBC category must have secured at least 60% marks or CGPA of 6.00 on a 10 point scale at the qualifying degree level; but for SC/ST/PWD category candidates, this percentage is 55% or 5.50 CGPA on a 10 point scale. The marks awarded for the qualifying degree will be considered for eligibility. Eligibility Requirements for Admission to M.Tech./M.Arch./ MURP Degree Programmes... [Information_Brochure_2026.pdf, p. 4] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "Admission Categories For Indian Candidates The candidates holding a four-year bachelor’s degree or equivalent and meeting the minimum educational qualifications as given in Table-1 are eligible to seek admission to M.Tech./M.Arch./MURP programmes. In addition, candidates of General, Gen-EWS and OBC ",
+      "3. Applicants of all categories (GEN/GEN-EWS/OBC/SC/ST/PWD) with 4-Year Bachelor’s degree from institutions other than the Ministry of Education funded Technical Institutions (erstwhile CFTIs of MoE) having a minimum CGPA of 7.50 on a 10-point scale or 75% marks and Qualified a national level test, ",
+      "No. School Specialization Minimum Educational Qualification (MEQ) Mehta Family School of Data Science and Artificial Intelligence  Data Mining and Big Data Analytics  Machine Learning and Deep Learning  Image and Video Analytics  Natural Language Processing  Soft Computing  Mathematical Method",
+      "S. No. Centre Specialization Minimum Educational Qualification (MEQ) Centre of Excellence in Disaster Mitigation & Management  Disaster Mitigation & Management (i) M. Tech. in Disaster Mitigation and Management, Civil Engineering, Geomatics Engineering, Mechanical and Industrial Engineering, Chemic",
+      "Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) 5 Chemistry  Analytical Chemistry  Inorganic Chemistry  Materials Chemistry  Organic Chemistry  Physical Chemistry (i) M.Sc. or equivalent degree in Chemistry / Physics / Applied Chemistry / Industrial Chemistry / Pharmace",
+      "a. A candidate seeking admission to postgraduate programmes leading to M.Tech./M.Arch./M.U.R.P. degree is allowed to give prioritized preference for a maximum of 14 academic programmes given in Table-1. Choices (max. 14) once filled-in in the Application Form shall not be changed/corrected/modified ",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Metallurgical and Materials Engineering  Metallurgical and Materials Engineering (i) B.Tech./ M.Tech. degree in Metallurgy / Materials Science and Engineering/ Ceramic Engineering/ Polymer Engineering or equivalent. (OR) (ii) ",
+      "Note: Schedule for Interview and/or Written Test will be intimated by the concerned Department/Centre/School. 1. Common Minimum Eligibility Criteria (CMEC) for Ph.D.Admission: An applicant should possess one of the following minimum qualifications in appropriate area(s) and she/he is required to ful",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Electrical Engineering  Instrumentation and Signal Processing  Power Electronics and Electric Drive  Power System Engineering  System and Control (i) B.Tech. / M.Tech. or equivalent degree in Electrical Engineering (OR) (ii"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 0.6666666666666666
+      },
+      "5": {
+        "relevance": 0.6
+      },
+      "10": {
+        "relevance": 0.5666666666666667
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q038",
+    "question": "If a sponsored candidate has only 1 year experience, can he apply for full-time sponsored M.Tech?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.50",
+    "answer": "Based on retrieved documents: Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to M.Tech. courses. For International Candidates Candidates holding a bachelor’s degree or equivalent in Engineering/Technology/Architecture/Planning/ Design and meeting the minimum educational qualifications are eligible to seek admission to M.Tech/M.Arch./MURP programmes. 3.1 Full-Time Sponsored Candidates These candidates must have a minimum of two years of full-time work experience till the last date of submission of application form in responsible capacity in a Registered Firm/ Company/ Industry/ Educational and Research Institution/Govt./Quasi Govt./Autonomous Organization in the relevant... [Information_Brochure_2026.pdf, p. 5] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to",
+      "3.2. Part-Time Sponsored Candidates (Three years duration) a) These candidates must satisfy condition specified at 3.1 as for full-time sponsored candidates, with the additional requirement that such organizations must be located either at Roorkee or within a radius of 20 km from Roorkee. b) There w",
+      "No. School Specialization Minimum Educational Qualification (MEQ) Mehta Family School of Data Science and Artificial Intelligence  Data Mining and Big Data Analytics  Machine Learning and Deep Learning  Image and Video Analytics  Natural Language Processing  Soft Computing  Mathematical Method",
+      "Note: 1. The candidates working in Institute / University awarding PG degree itself are not eligible for admission as part-time or full-time candidate, except QIP candidates. 2. Candidates admitted under R&T and PGT Schemes whose selection are made by Defence Head Quarters, are also required to appl",
+      "Admission Categories For Indian Candidates The candidates holding a four-year bachelor’s degree or equivalent and meeting the minimum educational qualifications as given in Table-1 are eligible to seek admission to M.Tech./M.Arch./MURP programmes. In addition, candidates of General, Gen-EWS and OBC ",
+      "3. Applicants of all categories (GEN/GEN-EWS/OBC/SC/ST/PWD) with 4-Year Bachelor’s degree from institutions other than the Ministry of Education funded Technical Institutions (erstwhile CFTIs of MoE) having a minimum CGPA of 7.50 on a 10-point scale or 75% marks and Qualified a national level test, ",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) 5 Chemistry  Analytical Chemistry  Inorganic Chemistry  Materials Chemistry  Organic Chemistry  Physical Chemistry (i) M.Sc. or equivalent degree in Chemistry / Physics / Applied Chemistry / Industrial Chemistry / Pharmace",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Hydro and Renewable Energy  Hydro Power  Renewable Energy  Solar Energy  Hybrid Energy Systems and Storage  Environmental Management of Water Bodies (i) B.Tech. / M. Tech. or equivalent in Civil / Electrical / Mechanical /",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Water Resources Development & Management  Water Resource Development and Management (i) B.E. /B. Tech. /M.E. /M.Tech. in Civil /Agricultural / Environment / Electrical/ Mechanical /Chemical / Computer/ Electronics Engineering ",
+      "1.1 Introduction to Postgraduate Academic Programmes 1.2 Dual Degree Programme The M.Tech./M.Arch./MURP candidates pursuing PG degree in any Department/Centre/School of IITR are permitted to switch over to Ph.D. Programme after 1st year subject to satisfying eligibility criteria as per applicable ru"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 0.6666666666666666
+      },
+      "5": {
+        "relevance": 0.6
+      },
+      "10": {
+        "relevance": 0.5
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q043",
+    "question": "How many years of work experience are required for full-time sponsored candidates?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 1,
+    "observed": "Relevance 1.00 but Accuracy 0.00 at K=1",
+    "answer": "Based on retrieved documents: 3.2. Part-Time Sponsored Candidates (Three years duration) a) These candidates must satisfy condition specified at 3.1 as for full-time sponsored candidates, with the additional requirement that such organizations must be located either at Roorkee or within a radius of 20 km from Roorkee. b) There will not be any age restriction. However, preference will be given to those who are below 45 years of age. c) The part-time students will be required to attend all lectures, tutorials and practical classes for the courses prescribed for them and must satisfy the attendance requirements. d) The status of a part-time student will not be changed from part-time to a regular full-time student. e) Members of the Staff of the Indian Institute of... [Information_Brochure_2026.pdf, p. 6]",
+    "retrieved_context": [
+      "3.2. Part-Time Sponsored Candidates (Three years duration) a) These candidates must satisfy condition specified at 3.1 as for full-time sponsored candidates, with the additional requirement that such organizations must be located either at Roorkee or within a radius of 20 km from Roorkee. b) There w"
+    ],
+    "metrics": {
+      "relevance": 1.0,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q044",
+    "question": "What is the duration of part-time sponsored M.Tech programme in years?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.67",
+    "answer": "Based on retrieved documents: Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to M.Tech. courses. For International Candidates Candidates holding a bachelor’s degree or equivalent in Engineering/Technology/Architecture/Planning/ Design and meeting the minimum educational qualifications are eligible to seek admission to M.Tech/M.Arch./MURP programmes. 3.1 Full-Time Sponsored Candidates These candidates must have a minimum of two years of full-time work experience till the last date of submission of application form in responsible capacity in a Registered Firm/ Company/ Industry/ Educational and Research Institution/Govt./Quasi Govt./Autonomous Organization in the relevant... [Information_Brochure_2026.pdf, p. 5] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to",
+      "3.2. Part-Time Sponsored Candidates (Three years duration) a) These candidates must satisfy condition specified at 3.1 as for full-time sponsored candidates, with the additional requirement that such organizations must be located either at Roorkee or within a radius of 20 km from Roorkee. b) There w",
+      "1.1 Introduction to Postgraduate Academic Programmes 1.2 Dual Degree Programme The M.Tech./M.Arch./MURP candidates pursuing PG degree in any Department/Centre/School of IITR are permitted to switch over to Ph.D. Programme after 1st year subject to satisfying eligibility criteria as per applicable ru",
+      "5.5 TCS Research Scholar Program This fellowship aims to call for quality multidisciplinary research activities in areas ranging from computer engineering and science, information systems and technology, software engineering, and other disciplines which utilize computing. Scholarship Details: Period",
+      "Postgraduate Programmes 1.1 Introduction to PG Academic Programmes 1.2 Dual Degree Programme Admission Categories Eligibility Requirements for Admission to M.Tech./M.Arch./MURP Degree Programmes 3.1 Full-Time Sponsored Candidates 3.2 Part-Time Sponsored Candidates (Three years duration) Important Da",
+      "Admission Categories For Indian Candidates The candidates holding a four-year bachelor’s degree or equivalent and meeting the minimum educational qualifications as given in Table-1 are eligible to seek admission to M.Tech./M.Arch./MURP programmes. In addition, candidates of General, Gen-EWS and OBC ",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) 5 Chemistry  Analytical Chemistry  Inorganic Chemistry  Materials Chemistry  Organic Chemistry  Physical Chemistry (i) M.Sc. or equivalent degree in Chemistry / Physics / Applied Chemistry / Industrial Chemistry / Pharmace",
+      "No. School Specialization Minimum Educational Qualification (MEQ) Mehta Family School of Data Science and Artificial Intelligence  Data Mining and Big Data Analytics  Machine Learning and Deep Learning  Image and Video Analytics  Natural Language Processing  Soft Computing  Mathematical Method",
+      "S. No. Centre Specialization Minimum Educational Qualification (MEQ) Centre of Excellence in Disaster Mitigation & Management  Disaster Mitigation & Management (i) M. Tech. in Disaster Mitigation and Management, Civil Engineering, Geomatics Engineering, Mechanical and Industrial Engineering, Chemic",
+      "5.6 Visvesvaraya Ph.D. Scheme Visvesvaraya Ph.D. Scheme for Electronics & IT of Digital India Corporation, Ministry of Electronics & Information Technology (MeitY), Government of India was initiated in the year 2014 withan objectivetoenhancenumber ofPh.D.sin thecountry. Under this scheme, Ph.D. seat"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 1.0
+      },
+      "5": {
+        "relevance": 0.8666666666666667
+      },
+      "10": {
+        "relevance": 0.6666666666666666
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q045",
+    "question": "How many years of professional experience are required for AMIE candidates to be eligible for M.Tech?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.63",
+    "answer": "Based on retrieved documents: Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to M.Tech. courses. For International Candidates Candidates holding a bachelor’s degree or equivalent in Engineering/Technology/Architecture/Planning/ Design and meeting the minimum educational qualifications are eligible to seek admission to M.Tech/M.Arch./MURP programmes. 3.1 Full-Time Sponsored Candidates These candidates must have a minimum of two years of full-time work experience till the last date of submission of application form in responsible capacity in a Registered Firm/ Company/ Industry/ Educational and Research Institution/Govt./Quasi Govt./Autonomous Organization in the relevant... [Information_Brochure_2026.pdf, p. 5] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) 5 Chemistry  Analytical Chemistry  Inorganic Chemistry  Materials Chemistry  Organic Chemistry  Physical Chemistry (i) M.Sc. or equivalent degree in Chemistry / Physics / Applied Chemistry / Industrial Chemistry / Pharmace",
+      "Admission Categories For Indian Candidates The candidates holding a four-year bachelor’s degree or equivalent and meeting the minimum educational qualifications as given in Table-1 are eligible to seek admission to M.Tech./M.Arch./MURP programmes. In addition, candidates of General, Gen-EWS and OBC ",
+      "S.NO. Department/Centre/ School & Code Academic Programme Minimum Educational Qualification Code Name 6 Electrical Engineering (EED) 25 M.Tech. Electric Drives & Power Electronics Bachelor’s degree in Electrical Engineering or its equivalent in relevant discipline. M.Tech. Advanced Instrumentation a",
+      "No. School Specialization Minimum Educational Qualification (MEQ) Mehta Family School of Data Science and Artificial Intelligence  Data Mining and Big Data Analytics  Machine Learning and Deep Learning  Image and Video Analytics  Natural Language Processing  Soft Computing  Mathematical Method",
+      "3. Applicants of all categories (GEN/GEN-EWS/OBC/SC/ST/PWD) with 4-Year Bachelor’s degree from institutions other than the Ministry of Education funded Technical Institutions (erstwhile CFTIs of MoE) having a minimum CGPA of 7.50 on a 10-point scale or 75% marks and Qualified a national level test, ",
+      "S. No. Centre Specialization Minimum Educational Qualification (MEQ) Centre of Excellence in Disaster Mitigation & Management  Disaster Mitigation & Management (i) M. Tech. in Disaster Mitigation and Management, Civil Engineering, Geomatics Engineering, Mechanical and Industrial Engineering, Chemic",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Hydro and Renewable Energy  Hydro Power  Renewable Energy  Solar Energy  Hybrid Energy Systems and Storage  Environmental Management of Water Bodies (i) B.Tech. / M. Tech. or equivalent in Civil / Electrical / Mechanical /",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Electrical Engineering  Instrumentation and Signal Processing  Power Electronics and Electric Drive  Power System Engineering  System and Control (i) B.Tech. / M.Tech. or equivalent degree in Electrical Engineering (OR) (ii",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Electronics and Communication Engineering  Communication, Network & Signal Processing  Microelectronics & VLSI  RF & Microwaves  Terahertz Communication and Sensing  Smart Electronic Systems & Sensors (i) M.E. / M.Tech. in"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 0.7777777777777778
+      },
+      "5": {
+        "relevance": 0.6666666666666666
+      },
+      "10": {
+        "relevance": 0.6333333333333333
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q046",
+    "question": "What are the admission categories for Indian candidates for M.Tech and what is the eligibility for each?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.60",
+    "answer": "Based on retrieved documents: Admission Categories For Indian Candidates The candidates holding a four-year bachelor’s degree or equivalent and meeting the minimum educational qualifications as given in Table-1 are eligible to seek admission to M.Tech./M.Arch./MURP programmes. In addition, candidates of General, Gen-EWS and OBC category must have secured at least 60% marks or CGPA of 6.00 on a 10 point scale at the qualifying degree level; but for SC/ST/PWD category candidates, this percentage is 55% or 5.50 CGPA on a 10 point scale. The marks awarded for the qualifying degree will be considered for eligibility. Eligibility Requirements for Admission to M.Tech./M.Arch./ MURP Degree Programmes... [Information_Brochure_2026.pdf, p. 4] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "Admission Categories For Indian Candidates The candidates holding a four-year bachelor’s degree or equivalent and meeting the minimum educational qualifications as given in Table-1 are eligible to seek admission to M.Tech./M.Arch./MURP programmes. In addition, candidates of General, Gen-EWS and OBC ",
+      "Candidates having AMIE/ AMIS/ AMIIChE/ AMIIM/ Grad IETE, who possess B.Sc. or Diploma in engineering and have at least three years research, teaching or other professional experience at the submission of last date of application acquired in relevant field, are also eligible to apply for admission to",
+      "a. A candidate seeking admission to postgraduate programmes leading to M.Tech./M.Arch./M.U.R.P. degree is allowed to give prioritized preference for a maximum of 14 academic programmes given in Table-1. Choices (max. 14) once filled-in in the Application Form shall not be changed/corrected/modified ",
+      "S. No. Centre Specialization Minimum Educational Qualification (MEQ) Centre for Transportation Systems (CTRANS)  Sustainable Transportation  Transportation Safety  Infrastructural Management  Environmental Impacts of Transportation Systems  Alternate Fuel (i) M.Tech./ MS(R) in Civil Engineering",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) 5 Chemistry  Analytical Chemistry  Inorganic Chemistry  Materials Chemistry  Organic Chemistry  Physical Chemistry (i) M.Sc. or equivalent degree in Chemistry / Physics / Applied Chemistry / Industrial Chemistry / Pharmace",
+      "S.NO. Department/Centre/ School & Code Academic Programme Minimum Educational Qualification Code Name 16 Disaster Mitigation and Management (DMC) 49 M.Tech. Disaster Mitigation and Management B.Tech. (Civil, Structural, Mechanical, Industrial, Chemical Engineering and Biotechnology /Computer Science",
+      "S. No. Centre Specialization Minimum Educational Qualification (MEQ) Centre of Excellence in Disaster Mitigation & Management  Disaster Mitigation & Management (i) M. Tech. in Disaster Mitigation and Management, Civil Engineering, Geomatics Engineering, Mechanical and Industrial Engineering, Chemic",
+      "S. No. Centre Specialization Minimum Educational Qualification (MEQ) Centre for Nanotechnology  Nanotechnology (i) B.E. / B.Tech. or M.E. / M.Tech. in Nanotechnology / Metallurgy / Chemical / Polymer / Mechanical / Biotechnology / Engineering Physics / Engineering Chemistry / Electronics / Electric",
+      "S. No. Department Specialization Minimum Educational Qualification (MEQ) Hydro and Renewable Energy  Hydro Power  Renewable Energy  Solar Energy  Hybrid Energy Systems and Storage  Environmental Management of Water Bodies (i) B.Tech. / M. Tech. or equivalent in Civil / Electrical / Mechanical /",
+      "Postgraduate Programmes 1.1 Introduction to PG Academic Programmes 1.2 Dual Degree Programme Admission Categories Eligibility Requirements for Admission to M.Tech./M.Arch./MURP Degree Programmes 3.1 Full-Time Sponsored Candidates 3.2 Part-Time Sponsored Candidates (Three years duration) Important Da"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 1.0
+      },
+      "5": {
+        "relevance": 0.7333333333333333
+      },
+      "10": {
+        "relevance": 0.6
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  },
+  {
+    "question_id": "Q048",
+    "question": "What are the documents required for PG application and how should they be uploaded?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 3,
+    "observed": "Relevance 0.89 but Accuracy 0.00 at K=3",
+    "answer": "Based on retrieved documents: For admission to Ph.D. programmes in Autumn Semester of the session 2026-27, candidates need to register and fill the application ONLINE only by accessing the website [link] on or before20th April, 2026. A. Documents Before applying online, candidates are required to keep the following documents ready for uploading: S. No. Particulars Size Instructions for Online Application & Others Up to 500 KB Upto 500 KB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB Upto 5 MB 1. Colour photograph (only in JPEG) 2. Signature (only in JPEG) 3. Gen-EWS/OBC-NCL/SC/ST/ UDID Card (PDF)(as applicable) 4. 10th Certificate/Marksheet(in single PDF) 5. 12t h Certificate/Diploma and Marksheet... [PhD_IB_A2026.pdf, p. 31] Additional context from 2 other chunks supports this.",
+    "retrieved_context": [
+      "For admission to Ph.D. programmes in Autumn Semester of the session 2026-27, candidates need to register and fill the application ONLINE only by accessing the website [link] on or before20th April, 2026. A. Documents Before applying online, candidates are required to keep the following documents rea",
+      "5.2.2 Documents to be Uploaded Before applying, candidates are advised to keep ready the scanned copies of following testimonials for uploading (Maximum size of each document : 5 MB): 1. Applicant Photo (In JPG) 2. Applicant Signature (In JPG) 3. 10th Marksheet/ Certificate (in pdf) 4. 12th/Diploma ",
+      "Postgraduate Programmes 1.1 Introduction to PG Academic Programmes 1.2 Dual Degree Programme Admission Categories Eligibility Requirements for Admission to M.Tech./M.Arch./MURP Degree Programmes 3.1 Full-Time Sponsored Candidates 3.2 Part-Time Sponsored Candidates (Three years duration) Important Da"
+    ],
+    "metrics": {
+      "relevance": 0.8888888888888888,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  },
+  {
+    "question_id": "Q050",
+    "question": "What is the application fee payment process and what are the important dates for PG admission 2026?",
+    "failure_type": "Correct context retrieved but LLM ignored it",
+    "k": 3,
+    "observed": "Relevance 0.89 but Accuracy 0.00 at K=3",
+    "answer": "Based on retrieved documents: 6.1 Basis of Selection for Admission Offer letter shall be issued by Academic Affairs Office, IIT Roorkee. The Institute fee structure is available on: https://iitr .ac.in/Academics/Institute%20Fees.html Revised fee structure if any, will reflect automatically. 6.3 Academic Registration A system of registration is followed for all the students joining the Institute. The selected candidates will have to register themselves online on the date and time to be intimated to them. After online registration, they are required to report physically for document verification as per the following schedule: On completion of document verification process, students should report to the concerned Head of the Department/Centre/ School and submit the joining report. Regular classes will start from July 16, 2026. 6.2 Fee Structure Admission... [Information_Brochure_2026.pdf, p. 18] Additional context from 2 other chunks supports this.",
+    "retrieved_context": [
+      "6.1 Basis of Selection for Admission Offer letter shall be issued by Academic Affairs Office, IIT Roorkee. The Institute fee structure is available on: https://iitr .ac.in/Academics/Institute%20Fees.html Revised fee structure if any, will reflect automatically. 6.3 Academic Registration A system of ",
+      "Postgraduate Programmes 1.1 Introduction to PG Academic Programmes 1.2 Dual Degree Programme Admission Categories Eligibility Requirements for Admission to M.Tech./M.Arch./MURP Degree Programmes 3.1 Full-Time Sponsored Candidates 3.2 Part-Time Sponsored Candidates (Three years duration) Important Da",
+      "Admission to various Postgraduate (PG) academic programmes of the Institute is open to all Indian candidates irrespective of caste, creed and sex. All foreign candidates are requested to visit the website of International Relations, IIT Roorkee https://ir.iitr.ac.in/ for relevant information towards"
+    ],
+    "metrics": {
+      "relevance": 0.8888888888888888,
+      "accuracy": 0.0
+    },
+    "explanation": "Retrieved chunks were relevant but LLM failed to use them to generate correct answer, possibly due to prompt or generation issue."
+  }
+]

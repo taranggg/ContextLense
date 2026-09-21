@@ -1,0 +1,37 @@
+[
+  {
+    "question_id": "Q001",
+    "question": "In which year was IIT Roorkee formally designated as an IIT?",
+    "failure_type": "More context introduced irrelevant information",
+    "k": 10,
+    "observed": "Relevance K=1 1.00 vs K=10 0.60",
+    "answer": "Based on retrieved documents: Introduction Indian Institute of Technology Roorkee (IIT Roorkee) has a rich legacy spanning178 years, and it is among the oldest engineering institutions in India. On September 21, 2001, it was formally designated as an Indian Institute of Technology through a Government of India ordinance, becoming the seventh IIT and earning the status of an Institutionof National Importance. Since its inception, IIT Roorkee has played a pivotal role in shaping the future of technology, engineering, and research in the country. Over the years, the Institute has expanded its reach beyond science and technology, making significant contributions to Architecture, Management, Design and the Humanities &Social Sciences. Today, IIT Roorkee continues to set higher benchmarks in education and it offers undergraduate programs in... [PhD_IB_A2026.pdf, p. 3] Additional context from 9 other chunks supports this.",
+    "retrieved_context": [
+      "Introduction Indian Institute of Technology Roorkee (IIT Roorkee) has a rich legacy spanning178 years, and it is among the oldest engineering institutions in India. On September 21, 2001, it was formally designated as an Indian Institute of Technology through a Government of India ordinance, becomin",
+      "For further information, please contact: (message only during working hours) Official Website: www.iitr .ac.in “IIT Roorkee is committed to nurture and promote diversity and inclusion” For selection criteria and program rlated queries 6395059674 FOR ADMISSION PROCESS AND APPLICATION PORTAL RELATED Q",
+      "All the mandatory documents mentioned in 5.2.2 including final results/provisional degree should be submitted at the time of online Admission Registration or on the last date mentioned for the same in the academic calendar of the Autumn Semester 2026-27. Information to this effect will be available ",
+      "a) The candidates are advised to read each and every instruction given in this Information Brochure very carefully before applying Online. b) All entries should be carefully made while applying online. IIT Roorkee will not be responsible for wrong entries. Candidates shall be sole responsible for th",
+      "Admission to various Postgraduate (PG) academic programmes of the Institute is open to all Indian candidates irrespective of caste, creed and sex. All foreign candidates are requested to visit the website of International Relations, IIT Roorkee https://ir.iitr.ac.in/ for relevant information towards",
+      "1.1 Introduction to Postgraduate Academic Programmes 1.2 Dual Degree Programme The M.Tech./M.Arch./MURP candidates pursuing PG degree in any Department/Centre/School of IITR are permitted to switch over to Ph.D. Programme after 1st year subject to satisfying eligibility criteria as per applicable ru",
+      "Ragging Contact Details Ragging is banned in the Institute and anyone indulging in ragging is likely to be punished appropriately and the punishment may include expulsion from the institution, suspension from the institution or classes for a limited period, or fine with a public apology. The punishm",
+      "Note: 1. The candidates working in Institute / University awarding PG degree itself are not eligible for admission as part-time or full-time candidate, except QIP candidates. 2. Candidates admitted under R&T and PGT Schemes whose selection are made by Defence Head Quarters, are also required to appl",
+      "B. Steps to be followed Candidatesmust followthefollowingstepswhilefillingtheonlineApplicationForm: Candidates are requested to applyonline only. Hard copy of the application need not be submitted. Physical applicationwill not be considered. Candidates may download their online submitted application",
+      "(iii) In-service External Research Scholar (ISERS) At the time of academic registration, the candidates should have experience of at least two years in a Government / Semi-Government organization / Public Sector Undertaking / AICTE / UGC recognized educational institute, or in a registered company w"
+    ],
+    "metrics": {
+      "1": {
+        "relevance": 1.0
+      },
+      "3": {
+        "relevance": 0.5555555555555556
+      },
+      "5": {
+        "relevance": 0.4666666666666667
+      },
+      "10": {
+        "relevance": 0.6
+      }
+    },
+    "explanation": "Adding more chunks decreased average relevance, suggesting later retrieved chunks were less relevant and potentially added noise."
+  }
+]
