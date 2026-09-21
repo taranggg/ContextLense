@@ -14,7 +14,7 @@ class LLMProvider:
     def __init__(self, config: Dict = None):
         self.config = config or get_llm_config()
         self.provider = self.config.get("provider","mock")
-        self.model = self.config.get("model","gpt-4o-mini")
+        self.model = self.config.get("model","gemini-2.5-flash")
         self.temperature = self.config.get("temperature",0.1)
         self.max_tokens = self.config.get("max_tokens",512)
         self.client = None
@@ -24,7 +24,7 @@ class LLMProvider:
         if self.provider in ["gemini", "openai", "groq", "openrouter", "together"]:
             try:
                 from openai import OpenAI
-                api_key = self.config.get("api_key") or os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("GROQ_API_KEY")
+                api_key = self.config.get("api_key")
                 base_url = self.config.get("base_url")
                 # Groq and OpenRouter have different base URLs
                 if self.provider == "gemini":
@@ -128,6 +128,10 @@ Answer:"""
 
         # Real OpenAI-compatible generation, including Gemini's compatible endpoint
         try:
+            extra = {}
+            # Gemini 2.5 Flash "thinks" by default and thinking tokens eat max_tokens, truncating answers
+            if self.provider == "gemini" and "flash" in self.model:
+                extra["reasoning_effort"] = "none"
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
@@ -136,13 +140,14 @@ Answer:"""
                 ],
                 temperature=self.temperature,
                 max_tokens=self.max_tokens,
+                **extra,
             )
-            answer = response.choices[0].message.content.strip()
+            answer = (response.choices[0].message.content or "").strip()
             gen_time = (time.perf_counter() - start)*1000
             meta = {
                 "provider": self.provider,
                 "model": self.model,
-                "usage": getattr(response, 'usage', None).__dict__ if hasattr(response, 'usage') else None,
+                "usage": response.usage.model_dump() if getattr(response, 'usage', None) else None,
             }
             return answer, gen_time, meta
         except Exception as e:

@@ -82,6 +82,16 @@ def evaluate_accuracy_rule_based(question: str, ground_truth: str, required_fact
         "method": "rule_based_required_facts"
     }
 
+def _strip_json_fence(text: str) -> str:
+    """Gemini often wraps JSON in ```json fences; strip them before parsing."""
+    text = text.strip()
+    if text.startswith("```"):
+        text = text.strip("`")
+        if text.lower().startswith("json"):
+            text = text[4:]
+    return text.strip()
+
+
 def evaluate_accuracy_llm_judge(question: str, ground_truth: str, generated_answer: str, required_facts: List[str]) -> Dict:
     """Use LLM as judge with strict JSON schema"""
     provider = get_llm_provider()
@@ -113,9 +123,9 @@ Evaluate:"""
                 messages=[{"role":"system","content":system},{"role":"user","content":user}],
                 temperature=0.0,
                 max_tokens=500,
-                response_format={"type":"json_object"} if provider.provider=="openai" else None
+                **({"response_format": {"type": "json_object"}} if provider.provider == "openai" else {}),
             )
-            content = resp.choices[0].message.content
+            content = _strip_json_fence(resp.choices[0].message.content or "")
             # Try parse json
             try:
                 parsed = json.loads(content)
@@ -221,7 +231,7 @@ Return JSON: {"scores": [{"chunk_id": "...", "score": 0-3, "reason": "..."}]}
                 temperature=0.0,
                 max_tokens=1000,
             )
-            content = resp.choices[0].message.content
+            content = _strip_json_fence(resp.choices[0].message.content or "")
             parsed = json.loads(content)
             scores = parsed.get("scores",[])
             # map
@@ -342,7 +352,7 @@ Return JSON: {"claims": [{"claim": "...", "label": "SUPPORTED|UNSUPPORTED|CONTRA
                 temperature=0.0,
                 max_tokens=1500,
             )
-            content = resp.choices[0].message.content
+            content = _strip_json_fence(resp.choices[0].message.content or "")
             parsed = json.loads(content)
             claims = parsed.get("claims",[])
             supported = sum(1 for c in claims if c.get("label")=="SUPPORTED")

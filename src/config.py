@@ -73,7 +73,7 @@ def get_llm_config():
     return {
         "provider": LLM_PROVIDER,
         "model": LLM_MODEL,
-        "api_key": GEMINI_API_KEY or OPENAI_API_KEY or GROQ_API_KEY,
+        "api_key": {"gemini": GEMINI_API_KEY, "groq": GROQ_API_KEY}.get(LLM_PROVIDER, OPENAI_API_KEY),
         "base_url": GEMINI_BASE_URL if LLM_PROVIDER == "gemini" else OPENAI_BASE_URL,
         "ollama_url": OLLAMA_BASE_URL,
         "temperature": GENERATION_TEMPERATURE,
