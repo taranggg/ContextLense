@@ -50,6 +50,7 @@ data/contextlens.db*
 
 # Frontend build
 frontend/dist/
+frontend/*.tsbuildinfo
 
 # Tests
 .pytest_cache/

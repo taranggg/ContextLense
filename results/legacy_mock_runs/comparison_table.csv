@@ -1,5 +1,0 @@
-k,answer_accuracy_mean,answer_accuracy_std,answer_accuracy_median,context_relevance_mean,context_relevance_std,context_relevance_median,hallucination_rate_mean,hallucination_rate_std,hallucination_rate_median,total_response_time_ms_mean,total_response_time_ms_std,total_response_time_ms_median,retrieval_time_ms_mean,retrieval_time_ms_std,generation_time_ms_mean,generation_time_ms_std
-1,0.5,0.4286,0.5,0.8733,0.2118,1.0,0.0245,0.0661,0.0,11.655,1.3738,11.5124,11.6239,1.3747,0.0311,0.0416
-3,0.51,0.4225,0.5,0.8089,0.1782,0.8889,0.1067,0.1231,0.0625,11.3757,0.8076,11.4253,11.349,0.8039,0.0268,0.025
-5,0.51,0.4225,0.5,0.7653,0.1778,0.8,0.0646,0.1136,0.0,11.3286,0.7318,11.4329,11.2988,0.7316,0.0298,0.0338
-10,0.51,0.4225,0.5,0.7067,0.1701,0.7333,0.0824,0.1194,0.0,11.3092,0.66,11.3858,11.2834,0.6563,0.0258,0.0263

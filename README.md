@@ -288,10 +288,6 @@ keyword search. The automatic validation found:
 The benchmark file has not been edited. The *Gold page* condition uses only the 25 validated
 questions, and the Research page can restrict all results to that subset.
 
-The files in `results/legacy_mock_runs/` are from an earlier version that used a mock generator
-(it pasted retrieved text instead of calling an LLM). They are **not** experimental results and
-are kept only for reference.
-
 ---
 
 ## Running the tests
@@ -491,8 +487,8 @@ ContextLens/
 │       └── styles/global.css
 ├── data/                         sample PDFs, benchmark, your documents (see data/README.md)
 ├── results/
-│   ├── benchmark/<run-id>/       real benchmark runs
-│   └── legacy_mock_runs/         old mock outputs (not results)
+│   └── benchmark/<run-id>/       benchmark runs
+├── docs/                         project history (original scaffolding prompt)
 └── presentation/outline.md
 ```
 
