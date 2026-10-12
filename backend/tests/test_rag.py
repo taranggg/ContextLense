@@ -55,7 +55,8 @@ def test_abstention_detection():
 def test_prompt_labels_sources_with_document_and_pages():
     messages = build_rag_messages("q?", [src(1, "alpha", pages=[3, 4])])
     assert "[S1] doc.pdf, pages 3–4\nalpha" in messages[1]["content"]
-    assert "only the information in the provided sources" in messages[0]["content"]
+    assert "ONLY the provided document excerpts" in messages[0]["content"]
+    assert "[S#]" in messages[0]["content"]
 
 
 def test_accuracy_rubric():
