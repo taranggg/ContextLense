@@ -354,7 +354,7 @@ export function Workspace() {
   if (primary.status !== "ready") {
     return (
       <main className="page page-narrow">
-        <h1 style={{ fontSize: 28 }}>{primary.filename}</h1>
+        <h1 style={{ fontSize: 28, overflowWrap: "anywhere" }}>{primary.filename}</h1>
         <div style={{ marginTop: 16 }}>
           {isProcessing(primary) ? (
             <div className="thinking">
