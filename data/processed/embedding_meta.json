@@ -1,9 +1,0 @@
-{
-  "model": "sentence-transformers/all-MiniLM-L6-v2",
-  "type": "sentence_transformer",
-  "dim": 384,
-  "num_chunks": 57,
-  "generation_time_sec": 3.5911672115325928,
-  "embedding_path": "/home/user/data/processed/embeddings.npy",
-  "index_path": "/home/user/data/processed/faiss.index"
-}
