@@ -37,3 +37,9 @@ written by domain experts, and its `source_page` values were assigned by keyword
 search. `validation_report.json` records, for each question, whether its required
 facts actually appear on the cited page of the PyMuPDF text. The benchmark file
 itself is never modified.
+
+## `sample_data.csv`
+
+A copy of `benchmark/ContextLens_Benchmark_50_Questions.csv`, placed at `data/sample_data.csv`
+to match the submission template's expected filename. It is not a separate dataset — edit the
+benchmark file, not this copy, and re-copy if the benchmark changes.

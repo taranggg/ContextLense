@@ -1,0 +1,7 @@
+condition,label,k,n,accuracy_normalised_mean,abstention_rate,context_fact_recall_mean,context_fact_bearing_precision_mean,gold_page_retrieved_rate,hallucination_rate,claims_lexically_supported_rate,citation_validity_mean,cites_gold_page_rate,total_ms_median,total_ms_mean,retrieval_ms_median,generation_ms_median
+no_rag,No retrieval,0,50,0.37,0.0,,,,,,,,3058.51,3517.749,0.0,3058.51
+k1,Top-1,1,50,0.32,0.46,0.4567,0.78,0.36,0.544,0.456,0.9615,0.2,6981.44,8030.6624,97.32,6846.74
+k3,Top-3,3,50,0.51,0.26,0.6807,0.5867,0.52,0.2542,0.7458,1.0,0.24,15741.8,18390.2744,39.59,15601.42
+k5,Top-5,5,50,0.55,0.1,0.7923,0.572,0.64,0.1273,0.8727,1.0,0.24,27192.43,27918.2112,60.45,26411.33
+k10,Top-10,10,50,0.59,0.1,0.8653,0.5,0.84,0.0699,0.9301,1.0,0.16,51532.35,53601.9418,92.19,51314.12
+gold,Gold page (oracle),oracle,25,0.72,0.04,0.8707,1.0,1.0,0.3818,0.6182,1.0,0.92,3731.57,4153.432,0.0,3726.37
