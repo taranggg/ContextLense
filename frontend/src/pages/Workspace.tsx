@@ -1,4 +1,4 @@
-import { ArrowUp, FileText, History, Library, PanelLeft, Square, Trash2 } from "lucide-react";
+import { FileText, History, Library, PanelLeft, Send, Square, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api, ApiError, streamChat } from "../api/client";
@@ -250,9 +250,9 @@ function Chat({ docs, sidebarOpen, onToggleSidebar, onConversationChange }: {
               type="submit"
               disabled={!canSend}
               aria-label="Send question"
-              className="flex size-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-colors disabled:bg-muted-foreground/40"
+              className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors disabled:bg-muted-foreground/40"
             >
-              <ArrowUp size={18} />
+              <Send size={16} />
             </button>
           )}
         </form>
@@ -462,12 +462,12 @@ export function Workspace() {
                     checked={checked}
                     disabled={checked && selectedIds.length === 1}
                     tabIndex={sidebarOpen ? 0 : -1}
-                    className="mt-1 accent-primary"
+                    className="mt-1 shrink-0 accent-primary"
                     onChange={() =>
                       setSelection(checked ? selectedIds.filter((x) => x !== doc.id) : [...selectedIds, doc.id])
                     }
                   />
-                  <span>
+                  <span className="min-w-0 flex-1">
                     <span className="block break-words leading-snug">{doc.filename}</span>
                     <span className="block break-words text-xs text-muted-foreground">
                       {plural(doc.page_count ?? 0, "page")}
