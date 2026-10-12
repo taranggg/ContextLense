@@ -1579,3 +1579,51 @@ table.data td.na {
   pointer-events: none;
   box-shadow: var(--shadow);
 }
+
+/* ---------------------------------------------------------------- multi-file upload */
+
+.upload-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.upload-items .upload-name {
+  font-size: 15px;
+}
+.upload-filename {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.upload-status {
+  flex: none;
+}
+.upload-error {
+  color: var(--danger);
+}
+.upload-item-error {
+  margin: 2px 0 0 28px;
+  font-size: 13px;
+  color: var(--danger);
+}
+.upload-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.upload-progress-row .progress {
+  margin-top: 0;
+}
+.upload-card > .progress,
+.upload-progress-row {
+  margin-top: 16px;
+}
+.upload-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}

@@ -8,18 +8,19 @@ export function Home() {
   const { documents, error, refresh } = useDocuments();
   const { readiness } = useReady();
   const maxMb = readiness?.limits.max_upload_mb ?? 25;
+  const maxFiles = readiness?.limits.max_files_per_upload ?? 5;
 
   return (
     <main className="page">
       <section className="hero">
         <h1>A clearer way to explore your documents.</h1>
         <p>
-          Upload a PDF and ask questions about it. Every answer points to the passages it came from, and everything runs on
-          this machine.
+          Upload PDFs — up to {maxFiles} at a time — and ask questions about them. Every answer points to the passages it
+          came from, and everything runs on this machine.
         </p>
       </section>
 
-      <Uploader maxMb={maxMb} onChange={refresh} />
+      <Uploader maxMb={maxMb} maxFiles={maxFiles} onChange={refresh} />
 
       <section className="section" aria-labelledby="docs-title">
         <div className="section-head">

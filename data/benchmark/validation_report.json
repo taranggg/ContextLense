@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T13:41:16+00:00",
+  "generated_at": "2026-10-12T14:07:30+00:00",
   "benchmark_sha256_16": "76347854b92e8854",
   "method": "Automatic lexical check: a required fact counts as present on a page when >= 60% of its content terms and all of its numbers appear in the page text extracted by PyMuPDF. A question's page reference is 'supported_on_cited_page' when >= 50% of its required facts are present on the cited page. This is not human verification; the benchmark file itself is never modified.",
   "counts": {

@@ -1,4 +1,5 @@
 import type {
+  BatchUploadResult,
   ChatResponse,
   ChunkPage,
   Comparison,
@@ -66,14 +67,14 @@ export const api = {
   benchmarkRun: (id: string) => request<{ summary: unknown; runs: unknown[] }>(`/api/research/benchmark/${id}`),
 };
 
-/** Upload with progress (fetch has no upload progress events). */
-export function uploadDocument(
-  file: File,
+/** Upload several PDFs in one request, with progress (fetch has no upload progress events). */
+export function uploadDocuments(
+  files: File[],
   onProgress: (fraction: number) => void,
-): { promise: Promise<DocumentInfo>; abort: () => void } {
+): { promise: Promise<BatchUploadResult>; abort: () => void } {
   const xhr = new XMLHttpRequest();
-  const promise = new Promise<DocumentInfo>((resolve, reject) => {
-    xhr.open("POST", API_BASE + "/api/documents");
+  const promise = new Promise<BatchUploadResult>((resolve, reject) => {
+    xhr.open("POST", API_BASE + "/api/documents/batch");
     xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(e.loaded / e.total);
     xhr.onload = () => {
       let body: any = null;
@@ -82,7 +83,7 @@ export function uploadDocument(
       } catch {
         /* ignore */
       }
-      if (xhr.status >= 200 && xhr.status < 300) resolve(body as DocumentInfo);
+      if (xhr.status >= 200 && xhr.status < 300) resolve(body as BatchUploadResult);
       else
         reject(
           new ApiError(
@@ -95,7 +96,7 @@ export function uploadDocument(
     xhr.onerror = () => reject(new ApiError(0, "network", NETWORK_MESSAGE));
     xhr.onabort = () => reject(new DOMException("Upload cancelled", "AbortError"));
     const form = new FormData();
-    form.append("file", file);
+    for (const file of files) form.append("files", file);
     xhr.send(form);
   });
   return { promise, abort: () => xhr.abort() };

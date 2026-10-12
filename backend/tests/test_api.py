@@ -209,3 +209,43 @@ def test_research_no_rag_baseline_has_no_retrieval(client, sample_pdf, fake_llm)
     baseline = body["conditions"][0]
     assert baseline["condition"] == "no_rag" and baseline["retrieved"] == []
     assert baseline["metrics"]["citation_validity"] is None
+
+
+def upload_many(client, paths, names=None):
+    handles = [open(p, "rb") for p in paths]
+    try:
+        files = [("files", ((names or [p.name for p in paths])[i], h, "application/pdf")) for i, h in enumerate(handles)]
+        return client.post("/api/documents/batch", files=files)
+    finally:
+        for h in handles:
+            h.close()
+
+
+def test_batch_upload_processes_each_file(client, tmp_path):
+    pdfs = [make_pdf(tmp_path / f"doc{i}.pdf", [f"Document {i} text about topic number {i} and more words."]) for i in range(3)]
+    r = upload_many(client, pdfs)
+    assert r.status_code == 202, r.text
+    body = r.json()
+    assert len(body["documents"]) == 3 and body["errors"] == []
+    for doc in body["documents"]:
+        assert wait_ready(client, doc["id"])["status"] == "ready"
+    assert len(client.get("/api/documents").json()["documents"]) == 3
+    assert client.get("/api/ready").json()["limits"]["max_files_per_upload"] == 5
+
+
+def test_batch_upload_reports_invalid_files_individually(client, tmp_path, sample_pdf):
+    bad = tmp_path / "notes.pdf"
+    bad.write_bytes(b"not a pdf at all")
+    r = upload_many(client, [sample_pdf, bad])
+    assert r.status_code == 202
+    body = r.json()
+    assert [d["filename"] for d in body["documents"]] == ["handbook.pdf"]
+    assert body["errors"] == [{"filename": "notes.pdf", "code": "not_a_pdf", "message": body["errors"][0]["message"]}]
+
+
+def test_batch_upload_rejects_more_than_five(client, tmp_path):
+    pdfs = [make_pdf(tmp_path / f"d{i}.pdf", ["Some text on this page for testing."]) for i in range(6)]
+    r = upload_many(client, pdfs)
+    assert r.status_code == 400
+    assert r.json()["error"]["code"] == "too_many_files"
+    assert client.get("/api/documents").json()["documents"] == []

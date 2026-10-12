@@ -53,3 +53,7 @@ frontend/dist/
 
 # Tests
 .pytest_cache/
+
+# Frontend uses pnpm only
+frontend/package-lock.json
+frontend/yarn.lock

@@ -51,6 +51,7 @@ class Settings:
     data_dir: Path = PROJECT_ROOT / "data"
     results_dir: Path = PROJECT_ROOT / "results"
     max_upload_mb: int = 25
+    max_files_per_upload: int = 5
 
     # Chunking (identical for every K)
     chunk_size_words: int = 500
@@ -118,6 +119,7 @@ def load_settings() -> Settings:
         data_dir=_resolve(_env("DATA_DIR", "./data")),
         results_dir=_resolve(_env("RESULTS_DIR", "./results")),
         max_upload_mb=_env_int("MAX_UPLOAD_MB", 25),
+        max_files_per_upload=_env_int("MAX_FILES_PER_UPLOAD", 5),
         chunk_size_words=_env_int("CHUNK_SIZE_WORDS", 500),
         chunk_overlap_words=_env_int("CHUNK_OVERLAP_WORDS", 80),
         embedding_model=_env("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"),

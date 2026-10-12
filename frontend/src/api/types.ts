@@ -29,6 +29,17 @@ export interface DocumentInfo {
   updated_at: string;
 }
 
+export interface UploadError {
+  filename: string;
+  code: string;
+  message: string;
+}
+
+export interface BatchUploadResult {
+  documents: DocumentInfo[];
+  errors: UploadError[];
+}
+
 export interface Chunk {
   chunk_id: string;
   document_id: string;
@@ -131,6 +142,7 @@ export interface Readiness {
   documents_ready: number;
   limits: {
     max_upload_mb: number;
+    max_files_per_upload: number;
     default_top_k: number;
     research_k_values: number[];
     max_question_chars: number;

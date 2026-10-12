@@ -65,6 +65,19 @@ class DocumentList(BaseModel):
     documents: list[DocumentInfo]
 
 
+class UploadError(BaseModel):
+    filename: str
+    code: str
+    message: str
+
+
+class BatchUploadResult(BaseModel):
+    """Per-file outcome of a multi-file upload: accepted files are processing, rejected ones say why."""
+
+    documents: list[DocumentInfo]
+    errors: list[UploadError]
+
+
 class ChunkPage(BaseModel):
     document_id: str
     total: int

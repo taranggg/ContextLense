@@ -1,12 +1,12 @@
 # ContextLens
 
-Upload a PDF, ask questions about it, and get answers with citations that point to the exact
-passages and pages they came from. Everything runs on your own machine. The PDF text, the
+Upload PDFs (up to 5 at a time), ask questions about them, and get answers with citations that
+point to the exact passages and pages they came from. Everything runs on your own machine. The PDF text, the
 search index and the language model all stay local, and no API key or paid AI service is needed.
 
 ContextLens has two modes:
 
-- **Documents.** Upload a PDF and chat with it. Each answer includes numbered citations you can
+- **Documents.** Upload one or more PDFs (up to 5 per upload) and chat with them. Each answer includes numbered citations you can
   click to read the supporting excerpt.
 - **Research.** Ask one question with 1, 3, 5 or 10 retrieved passages and compare the answers
   side by side. This mode also shows the results of an offline 50-question benchmark.
@@ -36,8 +36,8 @@ answers that a local LLM produces with RAG?*
 
 ## Quick start
 
-If you already have Python 3.12, Node 20+ and an Apple Silicon Mac, run these commands from the
-repository root:
+If you already have Python 3.12, Node 20+, pnpm and an Apple Silicon Mac, run these commands from
+the repository root:
 
 ```bash
 # one-time setup
@@ -45,11 +45,11 @@ python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
 hf download mlx-community/Qwen3-4B-Instruct-2507-4bit
-(cd frontend && npm install)
+(cd frontend && pnpm install)
 
 # every time — two terminals
 uvicorn backend.app.main:app --host 127.0.0.1 --port 8000   # terminal 1: backend
-cd frontend && npm run dev                                    # terminal 2: frontend
+cd frontend && pnpm dev                                       # terminal 2: frontend
 ```
 
 Then open **<http://localhost:5173>**.
@@ -63,7 +63,7 @@ Then open **<http://localhost:5173>**.
 | macOS on Apple Silicon (M1–M4) | Needed for local answer generation (MLX). Tested on an M4 with 16 GB RAM. On other machines upload, search and the UI still work, and the app reports the model as *unavailable*. |
 | Python | 3.12 recommended (verified with 3.12.11); 3.11 should also work |
 | Node.js | 20 or newer (verified with 24.4) |
-| npm or pnpm | Either works (verified with pnpm 11.9) |
+| pnpm | Required for the frontend (verified with 11.9). Install with `corepack enable` or `npm install -g pnpm`. `npm install` is deliberately blocked so that `pnpm-lock.yaml` stays the single lockfile. |
 | Disk space | About 3 GB: 2.3 GB for the language model and about 100 MB for the embedding model |
 
 ---
@@ -110,7 +110,7 @@ PDF is processed.
 
 ```bash
 cd frontend
-npm install                        # or: pnpm install
+pnpm install
 cp .env.example .env               # optional — sets VITE_API_BASE_URL=http://localhost:8000
 cd ..
 ```
@@ -155,7 +155,7 @@ Interactive API docs are at <http://127.0.0.1:8000/docs>.
 
 ```bash
 cd frontend
-npm run dev                        # or: pnpm dev
+pnpm dev
 ```
 
 Open **<http://localhost:5173>**. The status button in the top-right corner of the page should say
@@ -170,8 +170,8 @@ available again the next time you start the app.
 
 ```bash
 cd frontend
-npm run build                      # output in frontend/dist
-npm run preview                    # serve the build locally
+pnpm build                         # output in frontend/dist
+pnpm preview                       # serve the build locally
 ```
 
 > **Port already in use?** If something else (for example an older ContextLens server) is on port
@@ -182,9 +182,15 @@ npm run preview                    # serve the build locally
 
 ## Using the app
 
-1. **Upload a PDF.** On the **Documents** page, drop a PDF onto the upload area or click *Browse
-   files*. The page shows the progress through each step: upload, text extraction, splitting into
-   passages, embedding, indexing, and ready. When the document is ready, the chat opens.
+1. **Upload PDFs.** On the **Documents** page, drop up to **5 PDFs** onto the upload area, or click
+   *Browse files* and select several (each file can be up to 25 MB).
+   - Each file gets its own status line (uploading, extracting text, splitting into passages,
+     embedding, indexing, ready).
+   - Invalid files, such as a non-PDF or a file that is too large, are listed with the reason.
+     The other files still upload.
+   - When every file is ready, the chat opens with all of them selected. If any file failed, you
+     get an **Open documents** button instead.
+   - Selecting more than 5 files at once shows an error and uploads nothing.
 2. **Ask a question.** Type a question and press **Enter** (**Shift+Enter** adds a new line). The
    answer streams in. While it is generating, the square button stops it.
 3. **Check the sources.** Numbered chips in the answer and the **Sources** list show the
@@ -291,19 +297,20 @@ are kept only for reference.
 ## Running the tests
 
 ```bash
-# backend: 61 tests, using small stand-ins instead of the real models (nothing is downloaded)
+# backend: 64 tests, using small stand-ins instead of the real models (nothing is downloaded)
 source .venv/bin/activate
 python -m pytest
 
 # frontend: type-check and production build
 cd frontend
-npm run typecheck
-npm run build
+pnpm typecheck
+pnpm build
 ```
 
 The backend tests cover:
 
 - PDF validation: extension, MIME type, header, corrupt and password-protected files, size limit, scanned PDFs
+- multi-file upload: per-file results and the 5-file limit
 - page metadata
 - chunk overlap and stable IDs
 - index and metadata alignment, document filtering, fewer than K passages, empty indexes
@@ -354,7 +361,8 @@ only by the backend and are never sent to the browser.
 | `FRONTEND_ORIGIN` | `http://localhost:5173,http://127.0.0.1:5173` | Allowed browser origins (CORS) |
 | `DATA_DIR` | `./data` | Where documents, indexes and the database are stored |
 | `RESULTS_DIR` | `./results` | Where benchmark runs are written |
-| `MAX_UPLOAD_MB` | `25` | Upload size limit |
+| `MAX_UPLOAD_MB` | `25` | Size limit per PDF |
+| `MAX_FILES_PER_UPLOAD` | `5` | Maximum PDFs in one upload |
 | `CHUNK_SIZE_WORDS` / `CHUNK_OVERLAP_WORDS` | `500` / `80` | Passage size and overlap |
 | `EMBEDDING_MODEL` | `sentence-transformers/all-MiniLM-L6-v2` | Embedding model |
 | `DEFAULT_TOP_K` | `5` | Passages per answer when none is chosen |
@@ -387,7 +395,8 @@ to re-process them; use the *Retry* button.
 | --- | --- | --- |
 | GET | `/api/health` | Server is running (says nothing about the model) |
 | GET | `/api/ready` | Status of storage, embedding model and LLM |
-| POST | `/api/documents` | Upload a PDF (multipart field `file`). Returns `202`; poll the document for its status. |
+| POST | `/api/documents` | Upload one PDF (multipart field `file`). Returns `202`; poll the document for its status. |
+| POST | `/api/documents/batch` | Upload up to 5 PDFs (repeated multipart field `files`). Returns `202` with `documents` (accepted, now processing) and `errors` (rejected files, each with a reason). More than 5 files returns `400 too_many_files`. |
 | GET | `/api/documents` | List documents |
 | GET | `/api/documents/{id}` | Document details and processing status |
 | DELETE | `/api/documents/{id}` | Delete the document and all derived data |
@@ -470,7 +479,9 @@ ContextLens/
 │   │   └── research/benchmark.py benchmark command-line tool
 │   └── tests/                    pytest suite
 ├── frontend/
-│   ├── package.json
+│   ├── package.json              pnpm only (packageManager: pnpm@11.9.0)
+│   ├── pnpm-lock.yaml
+│   ├── scripts/only-pnpm.cjs     blocks npm/yarn installs
 │   ├── .env.example              VITE_API_BASE_URL
 │   └── src/
 │       ├── pages/                Home, Workspace (chat), Research

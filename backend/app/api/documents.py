@@ -3,10 +3,13 @@ from __future__ import annotations
 from fastapi import APIRouter, Query, Request, Response
 from fastapi.concurrency import run_in_threadpool
 from starlette.datastructures import UploadFile
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from ..schemas import ChunkPage, DocumentInfo, DocumentList
+from ..schemas import BatchUploadResult, ChunkPage, DocumentInfo, DocumentList, UploadError
+from ..services.document_service import UploadTooLargeError, display_filename
+from ..services.preprocessing_service import PDFValidationError
 from .deps import container_of
-from .errors import APIError
+from .errors import APIError, describe
 
 router = APIRouter(prefix="/api/documents", tags=["documents"])
 
@@ -32,6 +35,47 @@ async def upload_document(request: Request) -> DocumentInfo:
         )
     finally:
         await upload.close()
+
+
+@router.post("/batch", status_code=202, response_model=BatchUploadResult)
+async def upload_documents(request: Request) -> BatchUploadResult:
+    """
+    Upload up to MAX_FILES_PER_UPLOAD PDFs (default 5) as repeated multipart field `files`.
+    Each file is validated independently: valid ones start processing, invalid ones are
+    listed in `errors`. Poll each returned document for its status.
+    """
+    c = container_of(request)
+    max_files = c.settings.max_files_per_upload
+    too_many = APIError(400, "too_many_files", f"You can upload up to {max_files} PDFs at a time.")
+    declared = request.headers.get("content-length")
+    if declared and declared.isdigit() and int(declared) > max_files * c.settings.max_upload_bytes + _MULTIPART_OVERHEAD:
+        raise APIError(413, "file_too_large", f"Each file must be {c.settings.max_upload_mb} MB or smaller.")
+    try:
+        form = await request.form(max_files=max_files, max_fields=max_files + 5)
+    except StarletteHTTPException as exc:
+        if "Too many files" in str(exc.detail):
+            raise too_many from exc
+        raise APIError(400, "invalid_form", "The upload could not be read.") from exc
+
+    uploads = [f for f in form.getlist("files") if isinstance(f, UploadFile)]
+    if not uploads:
+        raise APIError(400, "missing_file", "Attach one or more PDFs in the 'files' field.")
+    if len(uploads) > max_files:
+        raise too_many
+
+    accepted: list[DocumentInfo] = []
+    errors: list[UploadError] = []
+    for upload in uploads:
+        try:
+            accepted.append(
+                await run_in_threadpool(c.documents.create_from_upload, upload.filename, upload.content_type, upload.file)
+            )
+        except (PDFValidationError, UploadTooLargeError) as exc:
+            _, code, message = describe(exc)
+            errors.append(UploadError(filename=display_filename(upload.filename), code=code, message=message))
+        finally:
+            await upload.close()
+    return BatchUploadResult(documents=accepted, errors=errors)
 
 
 @router.get("", response_model=DocumentList)

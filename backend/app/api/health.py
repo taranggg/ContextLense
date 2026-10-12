@@ -38,6 +38,7 @@ def ready(request: Request) -> ReadinessResponse:
         documents_ready=documents_ready,
         limits={
             "max_upload_mb": c.settings.max_upload_mb,
+            "max_files_per_upload": c.settings.max_files_per_upload,
             "default_top_k": c.settings.default_top_k,
             "research_k_values": list(c.settings.research_k_values),
             "max_question_chars": c.settings.max_question_chars,
