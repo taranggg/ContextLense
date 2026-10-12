@@ -1,383 +1,278 @@
-# ContextLens: Investigating the Impact of Retrieval Depth on RAG Answer Quality
+# ContextLens
 
-**Tagline:** *Does more context make AI smarter?*
+Upload a PDF, ask questions about it, and get answers grounded in cited passages from the
+original document. Retrieval, embeddings and generation all run locally. No hosted AI API is
+used, and no API key is needed.
 
-> Does increasing the number of retrieved chunks in a Retrieval-Augmented Generation (RAG) system always improve answer quality?
+ContextLens has two modes:
 
-This M.Tech Modern AI mini-project experimentally compares **Top-1 vs Top-3 vs Top-5 vs Top-10** retrieved chunks and measures:
+- **Documents (product mode).** Upload a PDF and chat with it. Each answer cites the passages
+  it used, and you can open every passage in a source inspector.
+- **Research mode.** Ask the same question at retrieval depths K = 1, 3, 5 and 10, compare the
+  answers side by side, and read the results of the offline 50-question benchmark.
 
-1. **Answer Accuracy** (0-2 → normalized 0-1)
-2. **Context Relevance** (0-3 per chunk → aggregated)
-3. **Hallucination Rate** (claim-level SUPPORTED/UNSUPPORTED/CONTRADICTED)
-4. **Response Time** (retrieval, generation, total)
+The research question behind the project is: *how does retrieval depth affect the quality of
+answers that a local LLM produces with RAG?*
 
-**Critical rule:** Only K changes. Everything else constant: same documents, same preprocessing, same chunks, same embedding model, same FAISS index, same similarity metric, same questions, same ground truth, same LLM, same prompt, same generation params, same eval methodology.
+## Architecture
 
----
-
-## 1. Motivation
-
-RAG systems retrieve top-K chunks to augment LLM generation. Common assumption: more context = better answer. But more context can introduce irrelevant information, contradictory passages, increased latency, and LLM confusion. This project tests that assumption empirically on IIT Roorkee academic documents.
-
-## 2. Dataset
-
-- **Information_Brochure_2026.pdf**: 25 pages, PG admissions (M.Tech/M.Arch/MURP), eligibility, sponsored categories, application process. Source: https://ir.iitr.ac.in/pdf/PG_Information_Brochure_2026.pdf
-- **PhD_IB_A2026.pdf**: 37 pages, PhD admission requirements, departments, MEQ, categories FTRS/PTRS/Golden Girl. Source: https://iitr.ac.in/Academics/static/Admission/PhD/Autumn%202026/Ph.D._IB_A2026.pdf
-
-Total: 62 pages, 2 documents.
-
-### Benchmark (50 Questions)
-
-- 15 direct factual
-- 10 procedural
-- 10 eligibility
-- 5 conditional
-- 5 numerical
-- 5 multi-part
-
-Each question has: question_id, question, category, ground_truth, required_facts, source_document, source_page, difficulty.
-
-Location: `data/benchmark/ContextLens_Benchmark_50_Questions.json` + CSV.
-
-If you have the official benchmark, replace the generated one. Validation will flag inconsistencies.
-
-## 3. Architecture
-
-```
-PDFs → Preprocessing (pypdf, cleaning) → Pages JSONL
-→ Chunking (500w, 80 overlap, para-aware) → Chunks JSONL (same for all K)
-→ Embeddings (all-MiniLM-L6-v2, 384d, FAISS IP) → embeddings.npy + faiss.index
-→ Retrieval (query embedding, top-K, cosine) → Ranked chunks + similarity
-→ Generation (LLM, faithful, cited) → Answer + sources
-→ Evaluation (accuracy, relevance, hallucination, latency)
-→ Comparison & Stats (Wilcoxon, Holm)
+```text
+React + TypeScript + Vite (frontend/)
+        │  REST + server-sent events
+FastAPI (backend/app)
+        ├─ document_service      upload → validate → extract → chunk → embed → index (background worker)
+        ├─ preprocessing_service PyMuPDF page-by-page text extraction, artifact cleaning, no OCR
+        ├─ chunking_service      paragraph-aware ~500-word chunks, 80-word overlap, page-tracked
+        ├─ embedding_service     sentence-transformers/all-MiniLM-L6-v2 (L2-normalised)
+        ├─ retrieval_service     one exact FAISS IndexFlatIP per document (scores = cosine similarity)
+        ├─ llm_service           LLMBackend adapter → MLXBackend (mlx-lm, Apple Silicon)
+        ├─ rag_service           context budgeting, [S#] source labels, citation mapping, excerpts
+        ├─ experiment_service    K comparisons with an identical settings snapshot, persisted
+        └─ research/benchmark.py offline benchmark: no-RAG, K=1/3/5/10, gold page
+storage: SQLite metadata + per-document folders under data/ (see data/README.md)
 ```
 
-## 4. RAG Pipeline
+**How citations work.** Each retrieved passage is shown to the model as `[S1]`, `[S2]`, and so
+on, together with its document name and pages. The model is told to cite only those markers.
+The backend then maps each marker back to the stored chunk metadata (document, pages,
+similarity) and selects the best-matching excerpt. A marker that does not correspond to a
+supplied passage is reported as invalid and is never displayed as a citation. A citation only
+shows where a statement came from; it does not prove the statement is correct, so the full
+passage is always available to inspect.
 
-- **Preprocessing**: page-by-page extraction, preserve doc name + page number, clean artifacts, fix hyphenated breaks, preserve paragraphs, store `data/processed/pages.jsonl`
-- **Chunking**: ~500 words, ~80 overlap, semantic/paragraph boundaries, same chunks for all K, store `chunks.jsonl`
-- **Embeddings**: sentence-transformers/all-MiniLM-L6-v2, configurable, efficient storage, not recomputed each start, FAISS IndexFlatIP
-- **Retrieval**: `retrieve(query, k=5)` returns rank, chunk_id, document, page, text, similarity
-- **Generation**: LLM ONLY uses retrieved context, cites [Doc, p. X], says "Insufficient information..." if insufficient, no invented citations. Provider abstraction: openai, groq, openrouter, together, ollama, mock (extractive fallback).
+## Requirements
 
-## 5. Experimental Design
+- macOS on Apple Silicon (tested on an M4 with 16 GB) for local generation. On other machines
+  everything except generation still works, and the app reports the model as *unavailable*.
+- Python 3.12 (3.11+ should work). Verified with 3.12.11.
+- Node 20+ and pnpm or npm. Verified with Node 24.4 and pnpm 11.9.
+- About 3 GB of disk space for the model, plus about 100 MB for the embedding model.
 
-- **Independent variable**: K ∈ {1,3,5,10}
-- **Dependent variables**: accuracy, relevance, hallucination, response time
-- **Design**: Paired — same question tested at all K, question as unit.
-- **Runs**: 50 × 4 = 200 (pilot 5×4=20)
-- **Constants**: docs, preprocessing, chunks, embedding, vector DB, metric, questions, ground truth, LLM, prompt, gen params, eval method.
+## Setup
 
-## 6. Evaluation Metrics
+All commands run from the repository root unless noted.
 
-### Answer Accuracy
-0-2 scale: 0=incorrect/missing, 1=partially correct, 2=correct & complete. Normalized: sum/(2×N). Rule-based checks required_facts coverage; optional LLM judge with strict JSON schema (question, ground_truth, answer).
-
-### Context Relevance
-0-3 per chunk: 0=irrelevant, 1=weakly related, 2=useful, 3=directly useful. Aggregate: sum/(3×K). Distinguishes vector similarity from human/LLM judged relevance.
-
-### Hallucination Rate
-Claim-level: extract claims → compare vs retrieved evidence → label SUPPORTED/UNSUPPORTED/CONTRADICTED. Rate = (UNSUPPORTED+CONTRADICTED)/TOTAL. "Unsupported" ≠ false, just not established by context.
-
-### Response Time
-retrieval_time_ms, generation_time_ms, total_response_time_ms via high-res timing. No fake times.
-
-## 7. Installation
-
-### Python 3.10+ recommended
+### 1. Backend
 
 ```bash
-git clone <repo>
-cd ContextLens
-pip install -r requirements.txt
+python3.12 -m venv .venv          # or: uv venv --python 3.12
+source .venv/bin/activate
+pip install -r requirements.txt   # or: uv pip install -r requirements.txt
+cp .env.example .env              # defaults work as-is
 ```
 
-For embeddings:
-- torch + sentence-transformers required for MiniLM. If unavailable, TF-IDF fallback activates (384 features).
+### 2. Local model (one-time download, ~2.3 GB)
 
-### Node 18+
+```bash
+hf download mlx-community/Qwen3-4B-Instruct-2507-4bit
+```
+
+By default the backend never downloads models at runtime (`LLM_ALLOW_DOWNLOAD=false`). If the
+model is missing, `/api/ready` and the header status show *Model not downloaded* together with
+the command above, and questions return HTTP 503. No substitute answer is generated.
+
+To use a different checkpoint, set `LLM_MODEL` to any MLX-LM-compatible Hugging Face repo or
+local path. Instruct models in the 3–4B range fit comfortably in 16 GB. The default is a
+non-thinking instruct model, so it does not emit reasoning tokens. The embedding model downloads
+automatically on first use and is cached by Hugging Face.
+
+### 3. Frontend
 
 ```bash
 cd frontend
-npm install
+pnpm install                      # or: npm install
+cp .env.example .env              # VITE_API_BASE_URL=http://localhost:8000
 ```
 
-## 8. Environment Variables
-
-Copy `.env.example` to `.env`:
-
-```
-LLM_PROVIDER=mock
-LLM_MODEL=gpt-4o-mini
-OPENAI_API_KEY=
-OPENAI_BASE_URL=https://api.openai.com/v1
-GROQ_API_KEY=
-OLLAMA_BASE_URL=http://localhost:11434
-EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
-Provider options: openai, groq, openrouter, together, ollama, mock.
-
-If no key, system uses mock extractive generation (first chunk snippet + citation) — clearly flagged. No silent fake answers.
-
-## 9. Preprocessing
+## Run
 
 ```bash
-python -m src.preprocessing
-# Output: data/processed/pages.jsonl + preprocessing_stats.json
+# terminal 1 — API on http://127.0.0.1:8000 (docs at /docs)
+source .venv/bin/activate
+uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+
+# terminal 2 — UI on http://localhost:5173
+cd frontend && pnpm dev
 ```
 
-## 10. Running Embeddings
+The model loads in the background at startup (about 2 s once it is cached). The status button
+in the header shows the model, embedding and storage state.
+
+> If another process is already listening on port 8000 (for example an older ContextLens
+> server), stop it first. Otherwise the browser may reach the wrong server.
+
+Production build of the UI: `cd frontend && pnpm build` (output goes to `frontend/dist`).
+
+## API
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/health` | Liveness only. Says nothing about the model. |
+| GET | `/api/ready` | Separate status for backend, storage, embedding model and LLM (`ready`, `loading`, `not_downloaded`, `unavailable`, …) |
+| POST | `/api/documents` | Multipart upload (`file`). Returns `202` with the document; poll it for status. |
+| GET | `/api/documents` | List documents with status, pages, chunks and warnings |
+| GET | `/api/documents/{id}` | One document |
+| DELETE | `/api/documents/{id}` | Delete the PDF, extracted text, chunks, vectors, index and related comparisons |
+| POST | `/api/documents/{id}/reprocess` | Retry a failed or interrupted document |
+| GET | `/api/documents/{id}/chunks?offset=&limit=` | Inspect indexed passages |
+| POST | `/api/chat` | `{question, document_ids, k?}` → answer, citations, retrieved chunks, latency, model info |
+| POST | `/api/chat/stream` | Same as `/api/chat`, as SSE (`retrieval`, `token`…, `done` or `error`). Closing the connection stops generation. |
+| POST | `/api/research/compare` (+ `/stream`) | Runs the same question at K = 1, 3, 5, 10 (optionally with a no-RAG baseline) and saves the result |
+| GET | `/api/research/results` | Saved comparisons and benchmark run summaries |
+| GET | `/api/research/comparisons/{id}`, `/api/research/benchmark/{run_id}` | Full records |
+
+Errors always have the form `{"error": {"code", "message"}}`. Stack traces and filesystem paths
+are never returned. Status codes:
+
+- 413: file too large
+- 415: not a PDF
+- 400: unreadable, encrypted or invalid PDF
+- 409: document missing or not ready
+- 503: local model unavailable
+- 502: generation failed
+
+## Documents: behaviour and limits
+
+- **Upload checks:** PDF only, 25 MB maximum (`MAX_UPLOAD_MB`). The extension, declared MIME
+  type and `%PDF-` header are all checked, and the file must open in PyMuPDF.
+  Password-protected PDFs are rejected.
+- **No OCR.** A PDF with no text layer fails with an explicit "OCR is not implemented" message.
+  Pages without text inside an otherwise normal PDF are listed as a warning and are not
+  searchable.
+- **Page numbers** are physical page positions (1-based), the same as a PDF viewer's page
+  counter, not printed page labels. Chunks can span adjacent pages; each citation shows the
+  page(s) its excerpt comes from and the full span of the passage.
+- **Document scope:** only the documents you select are searched. Every document has its own
+  index, so unselected or deleted documents cannot appear in results.
+- **Persistence:** after a restart, documents and their indexes are still available. Documents
+  that were mid-processing are marked *interrupted* and can be retried.
+- **One question at a time:** each question is answered on its own from retrieved passages.
+  Earlier turns are not sent to the model, so follow-up questions should be self-contained.
+- **Context budget:** the default budget is 12,288 tokens (prompt plus answer). Top-10 with
+  500-word passages uses about 8–9k tokens. If a prompt would exceed the budget, the
+  lowest-ranked passages are trimmed and the response reports `context_truncated`.
+
+## Research and evaluation
 
 ```bash
-python -m src.embeddings
-# Or force recompute:
-python -m src.embeddings --force
-# Output: embeddings.npy, faiss.index, embedding_meta.json
+python -m backend.app.research.benchmark ingest     # index data/raw/*.pdf as "Sample" documents
+python -m backend.app.research.benchmark validate   # check benchmark page references → data/benchmark/validation_report.json
+python -m backend.app.research.benchmark run        # 50 questions × conditions → results/benchmark/<run-id>/
+python -m backend.app.research.benchmark run --questions 5 --run-id pilot   # quick pilot
+python -m backend.app.research.benchmark rescore --run-id <id>              # recompute metrics from stored answers
 ```
 
-## 11. Running Retrieval (test)
+**Conditions.** Every condition uses the same model checkpoint, generation parameters (temperature
+0, 384 max tokens), RAG prompt (`rag-v1`), embedding model, chunks and index. Only the evidence
+given to the model changes:
+
+| Condition | Evidence |
+| --- | --- |
+| `no_rag` | None. Uses a context-free prompt (unavoidably different) with the same model and parameters. |
+| `k1`, `k3`, `k5`, `k10` | Top-K retrieved passages across both sample PDFs |
+| `gold` | The benchmark's cited page. Only for questions whose citation passed validation. |
+
+Runs are interleaved per question and written incrementally, so an interrupted run can be resumed
+with the same `--run-id`.
+
+**Metrics.** All metrics are rule-based and lexical, and none of them has been validated against
+human judgement:
+
+| Metric | Definition |
+| --- | --- |
+| Answer accuracy | The original ContextLens 0/1/2 rubric. Scores 2 if at least 80% of the required facts appear in the answer and 1 if at least 40% do. A fact counts as present when at least 60% of its content words and all of its numbers appear. Abstentions score 0. Reported normalised (÷2). |
+| Context fact recall | Share of required facts found in the supplied passages |
+| Fact-bearing precision | Share of supplied passages containing at least one required fact |
+| Gold page retrieved | Whether any supplied passage includes the validated gold page |
+| Lexical claim support | An answer sentence counts as *supported* if at least 60% of its content words and all of its numbers occur in the supplied context. *Unsupported* means not established by that evidence, not false. Contradictions are **not** detected. |
+| Citation validity | Share of `[S#]` markers that match a supplied passage. Also tracks whether the answer cites the gold page. |
+| Latency | Retrieval, generation and total time, measured on the machine that ran the benchmark |
+
+`summary.json` also reports paired Wilcoxon signed-rank tests between conditions on the per-question
+rubric scores and total latency, Holm-corrected within each metric.
+
+No LLM judge is used. The generator should not grade itself, and no second local judge model has
+been validated. In live comparisons for uploaded documents there is no ground truth, so
+correctness is shown as **Not evaluated**.
+
+**About the benchmark.** The 50 questions were generated from the sample PDFs, and their cited
+pages came from a keyword search. The automatic validation found the required facts on the cited
+page for 25 questions, on a different page for 18, and nowhere in the text for 7. The benchmark
+file has not been edited. The gold condition covers the 25 validated questions only, and the UI
+can show results restricted to that subset.
+
+**Legacy results.** The files in `results/legacy_mock_runs/` came from an earlier mock generator
+that pasted retrieved text instead of calling an LLM. They are kept for provenance only and are
+not findings.
+
+## Tests
 
 ```bash
-python -m src.retriever --query "What is eligibility for M.Tech?" --k 5
+source .venv/bin/activate
+python -m pytest                 # 60 backend tests; uses fakes, no model download needed
+cd frontend && pnpm typecheck && pnpm build
 ```
 
-## 12. Benchmark Generation / Validation
+The tests cover:
 
-If you have official benchmark, place at `data/benchmark/ContextLens_Benchmark_50_Questions.json`.
+- PDF validation: extension, MIME type, header, corrupt and encrypted files, size limit, image-only PDFs
+- page metadata
+- chunk size, overlap, empty pages and stable unique IDs
+- index and metadata alignment, document filtering, fewer than K chunks, empty and misaligned indexes
+- citation mapping and invalid markers
+- deletion cleanup and persistence across restarts
+- API validation and SSE event order
+- identical settings across K
+- a missing or disabled model returning 503 instead of an answer
 
-Otherwise generate from PDFs (grounded but synthetic):
+## Configuration
 
-```bash
-python -m src.generate_benchmark
+See `.env.example`. The key settings are `LLM_MODEL`, `LLM_RUNTIME` (`mlx` or `none`),
+`LLM_MAX_TOKENS`, `LLM_TEMPERATURE`, `LLM_CONTEXT_TOKENS`, `EMBEDDING_MODEL`, `CHUNK_SIZE_WORDS`,
+`CHUNK_OVERLAP_WORDS`, `MAX_UPLOAD_MB` and `FRONTEND_ORIGIN` (the CORS allow-list). Only
+`VITE_API_BASE_URL` is exposed to the browser.
+
+**Adding another local runtime.** Implement the `LLMBackend` protocol in
+`backend/app/services/llm_service.py` (`status`, `start_loading`, `count_tokens`, `generate`) and
+register it in `create_llm_backend`.
+
+**Changing the embedding model.** Existing documents keep their original vectors. Retrieval
+refuses to mix models and asks you to reprocess those documents.
+
+## Privacy
+
+Uploaded PDFs, extracted text, vectors and saved comparisons stay in `data/` on this machine.
+Questions and document text are not sent to any hosted AI service, and the server does not log
+question text. Hugging Face is contacted only to download models that are not yet cached. Data is
+not encrypted at rest. Conversation history is kept only in the browser's `localStorage`.
+
+## Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Header shows *Model not downloaded* | `hf download <LLM_MODEL>`, then restart the backend (or set `LLM_ALLOW_DOWNLOAD=true`) |
+| *Model unavailable* | MLX needs macOS on Apple Silicon and `pip install mlx-lm`. Everything else still works. |
+| Upload fails with "no extractable text" | The PDF is scanned or image-only. Run it through OCR (for example `ocrmypdf in.pdf out.pdf`) and upload the result. |
+| "indexed with a different embedding model" | Use *Retry* (reprocess) on the document after changing `EMBEDDING_MODEL` |
+| Browser shows "Can't reach the ContextLens backend" | Check the backend is running and `VITE_API_BASE_URL` / `FRONTEND_ORIGIN` match the ports you use |
+| Top-10 answers are slow | Expected. On an M4, prompt processing runs at about 290 tokens/s, so ~8k-token prompts take about 30 s before the first token. |
+| Answer ends abruptly | It reached `LLM_MAX_TOKENS`; the inspector reports *token limit reached* |
+
+## Project structure
+
+```text
+backend/app/        FastAPI app: api/, services/, storage/, research/benchmark.py
+backend/tests/      pytest suite (fakes for embedder and LLM)
+frontend/src/       pages/ (Home, Workspace, Research), components/, api/, lib/, styles/
+data/               sample PDFs, benchmark, user documents (see data/README.md)
+results/benchmark/  benchmark runs: config.json, runs.jsonl, summary.json
+results/legacy_mock_runs/   earlier mock outputs — not results
+presentation/       slide outline
 ```
 
-Validate dataset:
+## References
 
-```bash
-python -m src.validate_dataset
-# Output: data/processed/validation_report.json
-```
-
-## 13. Running Pilot (5×4=20 runs)
-
-```bash
-python -m src.experiment --pilot
-# Outputs: results/pilot_runs.jsonl, pilot_results.csv, pilot_comparison_table.csv, pilot_failure_cases.json, figures/
-```
-
-Check pilot report, retrieval quality, citations, latency, errors before full run.
-
-## 14. Running Full Experiment (50×4=200)
-
-Requires LLM configured for real generation. If mock, still runs but answers are extractive.
-
-```bash
-# With API key set in .env
-python -m src.experiment --full
-
-# Or limit questions for testing:
-python -m src.experiment --full --questions 10 --k-values 1,3,5,10
-```
-
-Outputs:
-
-```
-results/raw_runs.jsonl
-results/results.csv
-results/comparison_table.csv
-results/question_level_results.csv
-results/failure_cases.json
-results/statistical_analysis.csv
-results/figures/
-  accuracy_vs_k.png
-  relevance_vs_k.png
-  hallucination_vs_k.png
-  response_time_vs_k.png
-  accuracy_distribution_by_k.png
-  hallucination_distribution_by_k.png
-  response_time_distribution_by_k.png
-  question_level_k_comparison.png
-  retrieval_similarity_distribution.png
-  failure_case_summary.png
-```
-
-## 15. Starting Backend (FastAPI)
-
-```bash
-uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
-# Or:
-python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
-
-Health: GET http://localhost:8000/health
-Query: POST http://localhost:8000/api/query {"question":"...","k":5}
-Experiment: POST http://localhost:8000/api/experiment {"question":"..."}
-Summary: GET http://localhost:8000/api/results/summary
-Question: GET http://localhost:8000/api/results/question/{id}
-Benchmark: GET http://localhost:8000/api/benchmark
-Failure: GET http://localhost:8000/api/failure-cases
-Figures: GET http://localhost:8000/figures/{filename}
-```
-
-## 16. Starting Frontend (Next.js)
-
-```bash
-cd frontend
-npm run dev
-# http://localhost:3000
-
-# Build:
-npm run build
-npm start
-```
-
-Frontend env: `NEXT_PUBLIC_API_URL=http://localhost:8000` (default).
-
-Pages:
-
-- `/` Landing: hero, K cards, system status, architecture
-- `/experiment` Experiment Lab: question input, benchmark examples, pipeline viz, 4 columns Top-1/3/5/10 with chunks, similarity, answer, metrics
-- `/inspector` Context Inspector: rank, doc, page, similarity, text, expand/collapse, why retrieved
-- `/dashboard` Research Dashboard: Accuracy/Relevance/Hallucination/Time vs K charts, summary cards, comparison table, figures (neutral language, no winner)
-- `/failures` Failure Cases: auto-identified examples with explanation
-- `/methodology` Methodology: dataset, chunking, embedding, vector search, K, LLM, metrics, design, interactive diagram
-- `/about` About: research question, hypothesis, setup, limitations, future work, citations
-
-UX: loading, skeleton, error, empty, API status, progress, expandable context, source badges, metric tooltips, responsive, dark lab aesthetic (black/charcoal, white typography, red accent, thin borders).
-
-## 17. Results
-
-Experiment not yet run — run pilot then full.
-
-After run, check:
-
-- `results/comparison_table.csv` for aggregated metrics by K
-- `results/figures/` for publication-quality charts
-- `results/failure_cases.json` for interesting cases
-- `results/statistical_analysis.csv` for Wilcoxon + Holm
-
-Do NOT claim a K is best before measuring. Conclusion must come from data.
-
-## 18. Limitations
-
-- 2 docs, 62 pages, domain-specific
-- MiniLM lightweight; larger embeddings may differ
-- Rule-based eval; human eval more reliable
-- Mock fallback when no LLM key
-- Fixed chunking 500/80
-- 50 Qs moderate power
-
-## 19. Future Work
-
-- Adaptive K based on query complexity/confidence
-- Compare embeddings (MPNet, E5, BGE) + re-ranking (cross-encoder)
-- Context compression: summarize Top-10
-- Human eval
-- Multi-hop synthesis
-- Cost vs quality tradeoff
-- Larger K (20,50) + diverse LLMs
-
-## 20. Project Structure
-
-```
-ContextLens/
-├── README.md
-├── requirements.txt
-├── .env.example
-├── .gitignore
-├── data/
-│   ├── README.md
-│   ├── raw/
-│   │   ├── Information_Brochure_2026.pdf
-│   │   └── PhD_IB_A2026.pdf
-│   ├── processed/
-│   │   ├── pages.jsonl
-│   │   ├── chunks.jsonl
-│   │   ├── embeddings.npy
-│   │   ├── faiss.index
-│   │   └── ...
-│   └── benchmark/
-│       ├── ContextLens_Benchmark_50_Questions.json
-│       └── ContextLens_Benchmark_50_Questions.csv
-├── src/
-│   ├── config.py
-│   ├── utils.py
-│   ├── preprocessing.py
-│   ├── chunking.py
-│   ├── embeddings.py
-│   ├── retriever.py
-│   ├── generator.py
-│   ├── evaluation.py
-│   ├── experiment.py
-│   ├── validate_dataset.py
-│   └── generate_benchmark.py
-├── notebooks/
-│   └── experiment.ipynb
-├── results/
-│   ├── raw_runs.jsonl
-│   ├── results.csv
-│   ├── comparison_table.csv
-│   ├── question_level_results.csv
-│   ├── failure_cases.json
-│   └── figures/
-├── backend/
-│   └── app/
-│       ├── main.py
-│       ├── schemas.py
-│       ├── config.py
-│       └── services/
-│           ├── rag_service.py
-│           ├── experiment_service.py
-│           └── evaluation_service.py
-├── frontend/
-│   ├── package.json
-│   ├── next.config.js
-│   ├── tailwind.config.js
-│   └── src/
-│       ├── app/
-│       │   ├── page.tsx (Landing)
-│       │   ├── experiment/page.tsx
-│       │   ├── inspector/page.tsx
-│       │   ├── dashboard/page.tsx
-│       │   ├── failures/page.tsx
-│       │   ├── methodology/page.tsx
-│       │   └── about/page.tsx
-│       ├── components/
-│       │   ├── Navbar.tsx
-│       │   ├── MetricCard.tsx
-│       │   └── PipelineViz.tsx
-│       └── lib/
-│           └── utils.ts
-└── presentation/
-    └── outline.md
-```
-
-## 21. Reproducibility
-
-- Python 3.10+, Node 18+
-- Embedding: all-MiniLM-L6-v2 (384d) or TF-IDF fallback
-- Chunk: 500 words, 80 overlap, para-aware
-- Retrieval: cosine (FAISS IP), K=1,3,5,10
-- LLM: configurable provider, temperature 0.1, max_tokens 512, system prompt fixed
-- Eval: rule-based by default, optional LLM judge via EVAL_USE_LLM_JUDGE=true
-- Same chunks for all K
-- Paired statistical tests
-
-## 22. References
-
-- Lewis et al. (2020). RAG. NeurIPS.
+- Lewis et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. NeurIPS.
 - Reimers & Gurevych (2019). Sentence-BERT. EMNLP.
-- Johnson et al. (2019). FAISS. IEEE Big Data.
-- Es et al. (2024). RAGAS.
-- IIT Roorkee official brochures (primary data).
-
----
-
-**Backend:** http://localhost:8000  
-**Frontend:** http://localhost:3000  
-**Run full pipeline:** see sections 9-16.
-
-If LLM unavailable: `LLM generation unavailable. Configure LLM_PROVIDER/LLM_MODEL/API key.` — everything else works.
-
+- Johnson, Douze & Jégou (2019). Billion-scale similarity search with GPUs (FAISS). IEEE Trans. Big Data.
+- Es et al. (2024). RAGAS: Automated Evaluation of Retrieval Augmented Generation. EACL demos.

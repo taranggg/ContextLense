@@ -1,0 +1,55 @@
+{
+  "run_id": "full-50q-2026-10-12",
+  "started_at": "2026-10-12T13:41:16+00:00",
+  "benchmark_file": "ContextLens_Benchmark_50_Questions.json",
+  "benchmark_sha256_16": "76347854b92e8854",
+  "benchmark_note": "Questions were generated from the sample PDFs (see benchmark metadata), not written by domain experts.",
+  "question_count": 50,
+  "conditions": [
+    "no_rag",
+    "k1",
+    "k3",
+    "k5",
+    "k10",
+    "gold"
+  ],
+  "planned_runs": 275,
+  "documents": [
+    {
+      "id": "3ea5f86d3e6a683a",
+      "filename": "Information_Brochure_2026.pdf"
+    },
+    {
+      "id": "025ea45f3569bde7",
+      "filename": "PhD_IB_A2026.pdf"
+    }
+  ],
+  "model": {
+    "runtime": "mlx",
+    "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "max_tokens": 384,
+    "context_tokens": 12288
+  },
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "similarity": "cosine",
+  "chunk_size_words": 500,
+  "chunk_overlap_words": 80,
+  "prompt_version": "rag-v1",
+  "validation_counts": {
+    "supported_on_cited_page": 25,
+    "found_on_other_page": 18,
+    "not_found_in_document": 7
+  },
+  "evaluation": {
+    "method": "rule-based lexical heuristics",
+    "accuracy": "0/1/2 from required-fact coverage (>=80% -> 2, >=40% -> 1); abstentions score 0; normalised as score/2",
+    "context_fact_recall": "share of required facts present in the supplied context",
+    "context_fact_bearing_precision": "share of supplied chunks containing at least one required fact",
+    "gold_page_retrieved": "a supplied chunk includes the validated gold page",
+    "claims": "answer sentences labelled supported when >=60% of content terms and all numbers occur in the context; 'unsupported' means not established by the context, not false; contradictions are not detected",
+    "citation_validity": "share of [S#] markers that refer to a supplied source",
+    "limitations": "Heuristics have not been validated against human judgements. No LLM judge is used."
+  }
+}

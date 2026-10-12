@@ -1,0 +1,959 @@
+{
+  "generated_at": "2026-10-12T13:41:16+00:00",
+  "benchmark_sha256_16": "76347854b92e8854",
+  "method": "Automatic lexical check: a required fact counts as present on a page when >= 60% of its content terms and all of its numbers appear in the page text extracted by PyMuPDF. A question's page reference is 'supported_on_cited_page' when >= 50% of its required facts are present on the cited page. This is not human verification; the benchmark file itself is never modified.",
+  "counts": {
+    "supported_on_cited_page": 25,
+    "found_on_other_page": 18,
+    "not_found_in_document": 7
+  },
+  "questions": [
+    {
+      "question_id": "Q001",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 3,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        3
+      ],
+      "facts_found_on_cited_page": [
+        "September 21, 2001",
+        "designated as IIT",
+        "Government of India ordinance"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q002",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 3,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        3
+      ],
+      "facts_found_on_cited_page": [
+        "57 full-time postgraduate programmes"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q003",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 2,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        2,
+        23
+      ],
+      "facts_found_on_cited_page": [
+        "Full-Time Research Scholar",
+        "FTRS"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q004",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 2,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        2,
+        24
+      ],
+      "facts_found_on_cited_page": [
+        "Part-Time Research Scholar",
+        "PTRS"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q005",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.667,
+      "best_pages": [
+        17
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "experience certificate",
+        "sponsorship certificate",
+        "employer"
+      ]
+    },
+    {
+      "question_id": "Q006",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 4,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        3,
+        4
+      ],
+      "facts_found_on_cited_page": [
+        "four-year bachelor's degree",
+        "M.Tech admission"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q007",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 3,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        3
+      ],
+      "facts_found_on_cited_page": [
+        "Indian Institute of Technology Roorkee",
+        "178 years",
+        "oldest engineering institutions"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q008",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 2,
+      "status": "not_found_in_document",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.333,
+      "best_pages": [
+        5,
+        7,
+        23,
+        24,
+        25
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "Golden Girl",
+        "female candidates",
+        "PhD admission category"
+      ]
+    },
+    {
+      "question_id": "Q009",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 10,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 0.667,
+      "best_page_coverage": 0.667,
+      "best_pages": [
+        9,
+        10,
+        14,
+        19
+      ],
+      "facts_found_on_cited_page": [
+        "Chemistry",
+        "Materials Chemistry"
+      ],
+      "facts_missing_on_cited_page": [
+        "PhD specialization"
+      ]
+    },
+    {
+      "question_id": "Q010",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        2,
+        5
+      ],
+      "facts_found_on_cited_page": [
+        "Part-Time Sponsored",
+        "three years",
+        "M.Tech"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q011",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 3,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 0.75,
+      "best_page_coverage": 0.75,
+      "best_pages": [
+        3,
+        10
+      ],
+      "facts_found_on_cited_page": [
+        "M.Tech",
+        "after 1st year",
+        "eligibility criteria"
+      ],
+      "facts_missing_on_cited_page": [
+        "switch to PhD"
+      ]
+    },
+    {
+      "question_id": "Q012",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.333,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        4
+      ],
+      "facts_found_on_cited_page": [
+        "Roorkee"
+      ],
+      "facts_missing_on_cited_page": [
+        "Uttarakhand",
+        "main campus"
+      ]
+    },
+    {
+      "question_id": "Q013",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 0.667,
+      "best_page_coverage": 0.667,
+      "best_pages": [
+        2,
+        3
+      ],
+      "facts_found_on_cited_page": [
+        "MURP",
+        "postgraduate programme"
+      ],
+      "facts_missing_on_cited_page": [
+        "Master of Urban and Rural Planning"
+      ]
+    },
+    {
+      "question_id": "Q014",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 5,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 0.5,
+      "best_page_coverage": 0.5,
+      "best_pages": [
+        5,
+        10
+      ],
+      "facts_found_on_cited_page": [
+        "AMIE"
+      ],
+      "facts_missing_on_cited_page": [
+        "Associate Member of the Institution of Engineers"
+      ]
+    },
+    {
+      "question_id": "Q015",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 1,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.5,
+      "best_pages": [
+        6,
+        14,
+        18,
+        23
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "Institution of National Importance",
+        "Indian Institute of Technology"
+      ]
+    },
+    {
+      "question_id": "Q016",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 0.5,
+      "best_page_coverage": 0.5,
+      "best_pages": [
+        2,
+        14,
+        16,
+        17
+      ],
+      "facts_found_on_cited_page": [
+        "apply online",
+        "pay application fee"
+      ],
+      "facts_missing_on_cited_page": [
+        "admission portal",
+        "upload documents"
+      ]
+    },
+    {
+      "question_id": "Q017",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "not_found_in_document",
+      "cited_page_coverage": 0.25,
+      "best_page_coverage": 0.25,
+      "best_pages": [
+        2,
+        14,
+        15,
+        16,
+        17
+      ],
+      "facts_found_on_cited_page": [
+        "online registration"
+      ],
+      "facts_missing_on_cited_page": [
+        "uploading certificates",
+        "research proposal",
+        "payment of fee"
+      ]
+    },
+    {
+      "question_id": "Q018",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.6,
+      "best_pages": [
+        17
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "degree certificate",
+        "mark sheets",
+        "GATE score card",
+        "photograph",
+        "sponsorship certificate"
+      ]
+    },
+    {
+      "question_id": "Q019",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.6,
+      "best_pages": [
+        18
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "academic performance",
+        "GATE/NET",
+        "written test",
+        "interview",
+        "department"
+      ]
+    },
+    {
+      "question_id": "Q020",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.667,
+      "best_pages": [
+        5,
+        11
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "two years work experience",
+        "sponsorship letter",
+        "minimum educational qualifications"
+      ]
+    },
+    {
+      "question_id": "Q021",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "not_found_in_document",
+      "cited_page_coverage": 0.25,
+      "best_page_coverage": 0.25,
+      "best_pages": [
+        2,
+        14,
+        16,
+        20,
+        23
+      ],
+      "facts_found_on_cited_page": [
+        "Important dates"
+      ],
+      "facts_missing_on_cited_page": [
+        "information brochure",
+        "official website",
+        "admissions section"
+      ]
+    },
+    {
+      "question_id": "Q022",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 5,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        5
+      ],
+      "facts_found_on_cited_page": [
+        "international candidates",
+        "bachelor's degree",
+        "international admission portal",
+        "minimum qualifications"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q023",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.6,
+      "best_pages": [
+        3
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "M.Tech students",
+        "switching to PhD",
+        "after first year",
+        "through department",
+        "eligibility criteria"
+      ]
+    },
+    {
+      "question_id": "Q024",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 2,
+      "status": "not_found_in_document",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.2,
+      "best_pages": [
+        5,
+        7,
+        9,
+        12,
+        23
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "employed",
+        "employer NOC",
+        "minimum experience",
+        "coursework",
+        "department requirements"
+      ]
+    },
+    {
+      "question_id": "Q025",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.25,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        17
+      ],
+      "facts_found_on_cited_page": [
+        "non-refundable"
+      ],
+      "facts_missing_on_cited_page": [
+        "paid online",
+        "net banking",
+        "credit/debit card"
+      ]
+    },
+    {
+      "question_id": "Q026",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 4,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        4
+      ],
+      "facts_found_on_cited_page": [
+        "60% marks",
+        "CGPA 6.00",
+        "General, Gen-EWS, OBC",
+        "qualifying degree"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q027",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 4,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        4
+      ],
+      "facts_found_on_cited_page": [
+        "55% marks",
+        "5.50 CGPA",
+        "SC/ST/PWD",
+        "qualifying degree"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q028",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 1,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.75,
+      "best_pages": [
+        11
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "M.Sc.",
+        "Chemistry",
+        "PhD",
+        "minimum marks"
+      ]
+    },
+    {
+      "question_id": "Q029",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 1,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        5
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "two years",
+        "full-time work experience",
+        "responsible capacity",
+        "relevant field"
+      ]
+    },
+    {
+      "question_id": "Q030",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 5,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        5
+      ],
+      "facts_found_on_cited_page": [
+        "AMIE",
+        "B.Sc. or Diploma",
+        "three years experience",
+        "eligible for M.Tech"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q031",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 5,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        5
+      ],
+      "facts_found_on_cited_page": [
+        "international candidates",
+        "bachelor's degree",
+        "Engineering/Technology",
+        "minimum qualifications"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q032",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.75,
+      "best_pages": [
+        6
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "master's degree",
+        "relevant discipline",
+        "minimum marks",
+        "GATE/NET"
+      ]
+    },
+    {
+      "question_id": "Q033",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 3,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.25,
+      "best_page_coverage": 0.5,
+      "best_pages": [
+        4
+      ],
+      "facts_found_on_cited_page": [
+        "General"
+      ],
+      "facts_missing_on_cited_page": [
+        "60%",
+        "6.0 CGPA",
+        "PhD admission"
+      ]
+    },
+    {
+      "question_id": "Q034",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.25,
+      "best_page_coverage": 0.5,
+      "best_pages": [
+        5,
+        18
+      ],
+      "facts_found_on_cited_page": [
+        "sponsored candidates"
+      ],
+      "facts_missing_on_cited_page": [
+        "exempted from GATE",
+        "work experience",
+        "interview"
+      ]
+    },
+    {
+      "question_id": "Q035",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 2,
+      "status": "not_found_in_document",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.333,
+      "best_pages": [
+        5,
+        13,
+        23,
+        26,
+        29
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "no strict age limit",
+        "educational qualifications",
+        "department-specific criteria"
+      ]
+    },
+    {
+      "question_id": "Q036",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 4,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 0.667,
+      "best_page_coverage": 0.667,
+      "best_pages": [
+        4
+      ],
+      "facts_found_on_cited_page": [
+        "60% minimum",
+        "General category"
+      ],
+      "facts_missing_on_cited_page": [
+        "58% not eligible"
+      ]
+    },
+    {
+      "question_id": "Q037",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 3,
+      "status": "not_found_in_document",
+      "cited_page_coverage": 0.333,
+      "best_page_coverage": 0.333,
+      "best_pages": [
+        3,
+        10
+      ],
+      "facts_found_on_cited_page": [
+        "PhD eligibility criteria"
+      ],
+      "facts_missing_on_cited_page": [
+        "completed first year",
+        "department approval"
+      ]
+    },
+    {
+      "question_id": "Q038",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 1,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.667,
+      "best_pages": [
+        5
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "minimum two years",
+        "full-time work experience",
+        "not eligible with 1 year"
+      ]
+    },
+    {
+      "question_id": "Q039",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 4,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 0.667,
+      "best_page_coverage": 0.667,
+      "best_pages": [
+        4
+      ],
+      "facts_found_on_cited_page": [
+        "SC category",
+        "55% minimum"
+      ],
+      "facts_missing_on_cited_page": [
+        "56% eligible"
+      ]
+    },
+    {
+      "question_id": "Q040",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 5,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 0.75,
+      "best_page_coverage": 0.75,
+      "best_pages": [
+        5,
+        10
+      ],
+      "facts_found_on_cited_page": [
+        "AMIE",
+        "B.Sc. or Diploma",
+        "three years experience"
+      ],
+      "facts_missing_on_cited_page": [
+        "not eligible without"
+      ]
+    },
+    {
+      "question_id": "Q041",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.0,
+      "best_page_coverage": 0.5,
+      "best_pages": [
+        14,
+        16
+      ],
+      "facts_found_on_cited_page": [],
+      "facts_missing_on_cited_page": [
+        "25 pages",
+        "PG Information Brochure 2026"
+      ]
+    },
+    {
+      "question_id": "Q042",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 4,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        4
+      ],
+      "facts_found_on_cited_page": [
+        "6.00 CGPA",
+        "10-point scale",
+        "General category"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q043",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 5,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        5
+      ],
+      "facts_found_on_cited_page": [
+        "two years",
+        "full-time work experience",
+        "sponsored candidates"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q044",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        2,
+        5
+      ],
+      "facts_found_on_cited_page": [
+        "three years",
+        "part-time sponsored",
+        "M.Tech"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q045",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 5,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 1.0,
+      "best_page_coverage": 1.0,
+      "best_pages": [
+        5
+      ],
+      "facts_found_on_cited_page": [
+        "three years",
+        "research/teaching/professional experience",
+        "AMIE candidates"
+      ],
+      "facts_missing_on_cited_page": []
+    },
+    {
+      "question_id": "Q046",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.333,
+      "best_page_coverage": 0.5,
+      "best_pages": [
+        4
+      ],
+      "facts_found_on_cited_page": [
+        "Sponsored full-time 2 years experience",
+        "Part-time 3 years"
+      ],
+      "facts_missing_on_cited_page": [
+        "Regular with GATE",
+        "60% General",
+        "55% SC/ST/PWD",
+        "four-year bachelor's degree"
+      ]
+    },
+    {
+      "question_id": "Q047",
+      "source_document": "PhD_IB_A2026.pdf",
+      "source_page": 2,
+      "status": "supported_on_cited_page",
+      "cited_page_coverage": 0.6,
+      "best_page_coverage": 0.6,
+      "best_pages": [
+        2,
+        23,
+        24,
+        28
+      ],
+      "facts_found_on_cited_page": [
+        "FTRS Full-Time Research Scholar",
+        "full-time with fellowship",
+        "PTRS Part-Time Research Scholar"
+      ],
+      "facts_missing_on_cited_page": [
+        "employed",
+        "NOC"
+      ]
+    },
+    {
+      "question_id": "Q048",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.167,
+      "best_page_coverage": 0.833,
+      "best_pages": [
+        17
+      ],
+      "facts_found_on_cited_page": [
+        "uploaded online"
+      ],
+      "facts_missing_on_cited_page": [
+        "degree certificate",
+        "marksheets",
+        "GATE card",
+        "photo signature",
+        "specified format"
+      ]
+    },
+    {
+      "question_id": "Q049",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 10,
+      "status": "not_found_in_document",
+      "cited_page_coverage": 0.333,
+      "best_page_coverage": 0.333,
+      "best_pages": [
+        10,
+        11,
+        13
+      ],
+      "facts_found_on_cited_page": [
+        "M.Sc. Chemistry",
+        "Materials Chemistry"
+      ],
+      "facts_missing_on_cited_page": [
+        "Analytical",
+        "Inorganic",
+        "Organic",
+        "Physical Chemistry"
+      ]
+    },
+    {
+      "question_id": "Q050",
+      "source_document": "Information_Brochure_2026.pdf",
+      "source_page": 2,
+      "status": "found_on_other_page",
+      "cited_page_coverage": 0.333,
+      "best_page_coverage": 0.5,
+      "best_pages": [
+        17
+      ],
+      "facts_found_on_cited_page": [
+        "non-refundable",
+        "Important dates"
+      ],
+      "facts_missing_on_cited_page": [
+        "paid online",
+        "net banking/card/UPI",
+        "brochure",
+        "official website"
+      ]
+    }
+  ]
+}

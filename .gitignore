@@ -43,3 +43,13 @@ results/cache/
 # IDE
 .vscode/
 .idea/
+
+# ContextLens user data (uploaded PDFs, derived indexes, metadata)
+data/documents/
+data/contextlens.db*
+
+# Frontend build
+frontend/dist/
+
+# Tests
+.pytest_cache/
