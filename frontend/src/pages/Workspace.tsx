@@ -9,6 +9,9 @@ import { Notice, StatusPill } from "../components/common";
 import { formatDate, plural } from "../lib/format";
 import { isProcessing, llmUsable, useConversations, useDocuments, useStoredState } from "../lib/hooks";
 import { useReady } from "../lib/readiness";
+import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 const SUGGESTIONS = ["What is this document about?", "What are the key requirements or deadlines?"];
 
@@ -118,30 +121,35 @@ function Chat({ docs, sidebarOpen, onToggleSidebar, onConversationChange }: {
   const totalPages = docs.reduce((n, d) => n + (d.page_count ?? 0), 0);
 
   return (
-    <section className="chat" aria-label="Conversation">
-      <div className="chat-bar">
-        <button
-          type="button"
-          className="icon-btn"
+    <section className="relative flex min-h-0 min-w-0 flex-col" aria-label="Conversation">
+      <div className="flex min-h-[52px] items-center gap-2 overflow-x-hidden border-b border-border px-4 py-2.5">
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={onToggleSidebar}
           aria-label={sidebarOpen ? "Hide document list" : "Show document list"}
           aria-expanded={sidebarOpen}
         >
           <PanelLeft size={18} />
-        </button>
-        <div className="chat-bar-title">
-          <strong title={docs.map((d) => d.filename).join(", ")}>{title}</strong>
-          <span>
+        </Button>
+        <div className="min-w-0 flex-1">
+          <strong
+            title={docs.map((d) => d.filename).join(", ")}
+            className="line-clamp-2 block overflow-hidden text-sm font-semibold leading-tight break-words"
+          >
+            {title}
+          </strong>
+          <span className="text-xs text-muted-foreground">
             {plural(totalPages, "page")} · {plural(docs.reduce((n, d) => n + (d.chunk_count ?? 0), 0), "passage")} indexed
           </span>
         </div>
-        <button type="button" className="btn btn-ghost btn-sm" onClick={() => setInspector({ turnId: null, focus: null, tab: "document" })}>
+        <Button variant="ghost" size="sm" onClick={() => setInspector({ turnId: null, focus: null, tab: "document" })}>
           <Library size={15} aria-hidden="true" /> Passages
-        </button>
+        </Button>
         {turns.length > 0 && (
-          <button
-            type="button"
-            className="icon-btn"
+          <Button
+            variant="ghost"
+            size="icon"
             disabled={busy}
             onClick={() => {
               setTurns([]);
@@ -151,23 +159,31 @@ function Chat({ docs, sidebarOpen, onToggleSidebar, onConversationChange }: {
             title="Clear conversation"
           >
             <Trash2 size={16} />
-          </button>
+          </Button>
         )}
       </div>
 
-      <div className="chat-scroll" ref={scrollRef}>
+      <div className="flex-1 overflow-y-auto scroll-smooth" ref={scrollRef}>
         {!turnsLoaded ? (
-          <div className="thinking" style={{ justifyContent: "center", marginTop: 40 }}>
-            <span className="spinner" aria-hidden="true" /> Loading conversation…
+          <div className="mt-10 flex items-center justify-center gap-2.5 text-[15px] text-muted-foreground">
+            <span className="size-3.5 shrink-0 animate-spin rounded-full border-2 border-secondary border-t-foreground/60" aria-hidden="true" /> Loading
+            conversation…
           </div>
         ) : turns.length === 0 ? (
-          <div className="chat-empty">
-            <h2>Ask about {docs.length === 1 ? "this document" : "these documents"}.</h2>
-            <p>Answers use only the text of {docs.length === 1 ? docs[0].filename : "the selected documents"}, with the passages they come from.</p>
+          <div className="mx-auto mt-[12vh] max-w-[560px] px-6 text-center">
+            <h2 className="text-[28px] tracking-[-0.025em]">Ask about {docs.length === 1 ? "this document" : "these documents"}.</h2>
+            <p className="mt-2.5 break-words text-muted-foreground">
+              Answers use only the text of {docs.length === 1 ? docs[0].filename : "the selected documents"}, with the passages they come from.
+            </p>
             {modelOk && (
-              <div className="suggestions">
+              <div className="mt-7 flex flex-wrap justify-center gap-2">
                 {SUGGESTIONS.map((s) => (
-                  <button key={s} type="button" className="suggestion" onClick={() => ask(s)}>
+                  <button
+                    key={s}
+                    type="button"
+                    className="rounded-xl border border-input bg-card px-3.5 py-1.5 text-sm text-foreground/80 transition-colors hover:border-foreground/30 hover:text-foreground"
+                    onClick={() => ask(s)}
+                  >
                     {s}
                   </button>
                 ))}
@@ -175,7 +191,7 @@ function Chat({ docs, sidebarOpen, onToggleSidebar, onConversationChange }: {
             )}
           </div>
         ) : (
-          <div className="thread">
+          <div className="mx-auto max-w-[740px] px-6 pb-6 pt-8">
             {turns.map((turn) => (
               <Turn
                 key={turn.id}
@@ -191,22 +207,22 @@ function Chat({ docs, sidebarOpen, onToggleSidebar, onConversationChange }: {
         )}
       </div>
 
-      <div className="composer-wrap">
+      <div className="bg-gradient-to-t from-background to-transparent px-6 pb-5 pt-3">
         {readiness && !modelOk && (
-          <div style={{ maxWidth: 740, margin: "0 auto 10px" }}>
+          <div className="mx-auto mb-2.5 max-w-[740px]">
             <Notice tone="error">
               The local model is unavailable, so questions can't be answered right now. {readiness.llm.detail}
             </Notice>
           </div>
         )}
         <form
-          className="composer"
+          className="mx-auto flex max-w-[740px] items-end gap-2 rounded-[22px] border border-input bg-card py-2 pl-4.5 pr-2 shadow-xs transition-colors focus-within:border-foreground/30"
           onSubmit={(e) => {
             e.preventDefault();
             send();
           }}
         >
-          <label htmlFor="question" className="visually-hidden">
+          <label htmlFor="question" className="sr-only">
             Ask a question
           </label>
           <textarea
@@ -218,28 +234,39 @@ function Chat({ docs, sidebarOpen, onToggleSidebar, onConversationChange }: {
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={onKeyDown}
             maxLength={readiness?.limits.max_question_chars ?? 2000}
+            className="max-h-[200px] flex-1 resize-none border-none bg-transparent py-1.5 leading-snug outline-none"
           />
           {busy ? (
-            <button type="button" className="send-btn" onClick={() => abortRef.current?.abort()} aria-label="Stop generating">
+            <button
+              type="button"
+              onClick={() => abortRef.current?.abort()}
+              aria-label="Stop generating"
+              className="flex size-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-colors"
+            >
               <Square size={14} fill="currentColor" />
             </button>
           ) : (
-            <button type="submit" className="send-btn" disabled={!canSend} aria-label="Send question">
+            <button
+              type="submit"
+              disabled={!canSend}
+              aria-label="Send question"
+              className="flex size-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-colors disabled:bg-muted-foreground/40"
+            >
               <ArrowUp size={18} />
             </button>
           )}
         </form>
-        <div className="composer-foot">
+        <div className="mx-auto mt-2 flex max-w-[740px] justify-between gap-3 text-xs text-muted-foreground">
           <span>Enter to send · Shift+Enter for a new line</span>
-          <label className="depth-select">
+          <label className="inline-flex items-center gap-1.5">
             Passages per answer
-            <select value={k} onChange={(e) => setK(Number(e.target.value))} disabled={busy}>
+            <Select value={k} onChange={(e) => setK(Number(e.target.value))} disabled={busy} className="h-6 px-1.5 text-xs">
               {[1, 3, 5, 10].map((v) => (
                 <option key={v} value={v}>
                   {v}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
         </div>
       </div>
@@ -272,30 +299,31 @@ function HistoryList({ conversations, activeIds, navigate, onDelete }: {
   navigate: ReturnType<typeof useNavigate>;
   onDelete: (ids: string[]) => void;
 }) {
-  if (!conversations) return <p className="empty" style={{ padding: "8px 8px" }}>Loading…</p>;
-  if (conversations.length === 0) return <p className="empty" style={{ padding: "8px 8px" }}>No conversations yet.</p>;
+  if (!conversations) return <p className="px-2 py-2 text-center text-[15px] text-muted-foreground">Loading…</p>;
+  if (conversations.length === 0) return <p className="px-2 py-2 text-center text-[15px] text-muted-foreground">No conversations yet.</p>;
   return (
     <>
       {conversations.map((conv) => {
         const key = conv.document_ids.join(",");
         const active = sameDocs(conv.document_ids, activeIds);
         return (
-          <div key={key} className={`sidebar-doc history-row${active ? " active" : ""}`}>
-            <button type="button" className="history-open" onClick={() => openConversation(navigate, conv.document_ids)}>
-              <span className="name">{conv.title}</span>
-              <span className="meta" style={{ display: "block" }}>
+          <div key={key} className={cn("group flex items-center gap-2.5 rounded-lg p-2 pr-1", active && "bg-secondary")}>
+            <button type="button" className="min-w-0 flex-1 bg-none p-0 text-left text-sm" onClick={() => openConversation(navigate, conv.document_ids)}>
+              <span className="block break-words leading-snug">{conv.title}</span>
+              <span className="block break-words text-xs text-muted-foreground">
                 {conv.document_names.join(", ")} · {plural(conv.turn_count, "message")} · {formatDate(conv.updated_at)}
               </span>
             </button>
-            <button
-              type="button"
-              className="icon-btn"
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-[26px] shrink-0 opacity-0 transition-opacity group-hover:opacity-100 hover:opacity-100"
               aria-label="Delete conversation"
               title="Delete conversation"
               onClick={() => onDelete(conv.document_ids)}
             >
               <Trash2 size={14} />
-            </button>
+            </Button>
           </div>
         );
       })}
@@ -336,16 +364,21 @@ export function Workspace() {
 
   if (error && !documents) {
     return (
-      <main className="page page-narrow">
+      <main className="mx-auto max-w-[760px] px-6 pb-24 pt-[72px]">
         <Notice tone="error">{error.message}</Notice>
       </main>
     );
   }
-  if (!documents) return <main className="page page-narrow"><p className="empty">Loading…</p></main>;
+  if (!documents)
+    return (
+      <main className="mx-auto max-w-[760px] px-6 pb-24 pt-[72px]">
+        <p className="py-10 text-center text-[15px] text-muted-foreground">Loading…</p>
+      </main>
+    );
   if (!primary) {
     return (
-      <main className="page page-narrow">
-        <Notice tone="error" actions={<Link to="/" className="btn btn-secondary btn-sm">Back to documents</Link>}>
+      <main className="mx-auto max-w-[760px] px-6 pb-24 pt-[72px]">
+        <Notice tone="error" actions={<Button asChild variant="secondary" size="sm"><Link to="/">Back to documents</Link></Button>}>
           This document doesn't exist. It may have been deleted.
         </Notice>
       </main>
@@ -353,15 +386,16 @@ export function Workspace() {
   }
   if (primary.status !== "ready") {
     return (
-      <main className="page page-narrow">
-        <h1 style={{ fontSize: 28, overflowWrap: "anywhere" }}>{primary.filename}</h1>
-        <div style={{ marginTop: 16 }}>
+      <main className="mx-auto max-w-[760px] px-6 pb-24 pt-[72px]">
+        <h1 className="break-words text-[28px] font-semibold">{primary.filename}</h1>
+        <div className="mt-4">
           {isProcessing(primary) ? (
-            <div className="thinking">
-              <span className="spinner" aria-hidden="true" /> <StatusPill status={primary.status} />
+            <div className="flex items-center gap-2.5 text-[15px] text-muted-foreground">
+              <span className="size-3.5 shrink-0 animate-spin rounded-full border-2 border-secondary border-t-foreground/60" aria-hidden="true" />{" "}
+              <StatusPill status={primary.status} />
             </div>
           ) : (
-            <Notice tone="error" actions={<Link to="/" className="btn btn-secondary btn-sm">Back to documents</Link>}>
+            <Notice tone="error" actions={<Button asChild variant="secondary" size="sm"><Link to="/">Back to documents</Link></Button>}>
               {primary.error_message ?? "This document could not be processed."}
             </Notice>
           )}
@@ -373,15 +407,31 @@ export function Workspace() {
   const readySelected = selected.filter((d) => d.status === "ready");
 
   return (
-    <div className={`workspace${sidebarOpen ? "" : " sidebar-collapsed"}`}>
-      <aside className="sidebar" aria-label="Documents and conversation history" aria-hidden={!sidebarOpen}>
-        <div className="sidebar-tabs" role="tablist">
+    <div
+      className={cn(
+        "grid h-[calc(100dvh-56px)] grid-cols-[264px_minmax(0,1fr)] max-[860px]:grid-cols-[minmax(0,1fr)]",
+        !sidebarOpen && "grid-cols-[0_minmax(0,1fr)] max-[860px]:grid-cols-[minmax(0,1fr)]",
+      )}
+    >
+      <aside
+        aria-label="Documents and conversation history"
+        aria-hidden={!sidebarOpen}
+        className={cn(
+          "overflow-y-auto border-r border-border bg-background p-3",
+          !sidebarOpen && "invisible border-none p-0 max-[860px]:invisible",
+          "max-[860px]:fixed max-[860px]:inset-y-0 max-[860px]:left-0 max-[860px]:top-14 max-[860px]:z-20 max-[860px]:w-[280px] max-[860px]:shadow-lg",
+        )}
+      >
+        <div className="mb-3.5 mx-1 flex gap-1 rounded-md bg-muted p-0.5" role="tablist">
           <button
             type="button"
             role="tab"
             aria-selected={sidebarTab === "documents"}
-            className={`sidebar-tab${sidebarTab === "documents" ? " active" : ""}`}
             tabIndex={sidebarOpen ? 0 : -1}
+            className={cn(
+              "flex h-[30px] flex-1 items-center justify-center gap-1.5 rounded-sm text-[12.5px] font-medium text-muted-foreground transition-colors",
+              sidebarTab === "documents" && "bg-card text-foreground shadow-xs",
+            )}
             onClick={() => setSidebarTab("documents")}
           >
             <FileText size={14} aria-hidden="true" /> Documents
@@ -390,8 +440,11 @@ export function Workspace() {
             type="button"
             role="tab"
             aria-selected={sidebarTab === "history"}
-            className={`sidebar-tab${sidebarTab === "history" ? " active" : ""}`}
             tabIndex={sidebarOpen ? 0 : -1}
+            className={cn(
+              "flex h-[30px] flex-1 items-center justify-center gap-1.5 rounded-sm text-[12.5px] font-medium text-muted-foreground transition-colors",
+              sidebarTab === "history" && "bg-card text-foreground shadow-xs",
+            )}
             onClick={() => setSidebarTab("history")}
           >
             <History size={14} aria-hidden="true" /> History
@@ -403,19 +456,20 @@ export function Workspace() {
             {ready.map((doc) => {
               const checked = selectedIds.includes(doc.id);
               return (
-                <label key={doc.id} className="sidebar-doc">
+                <label key={doc.id} className="flex cursor-pointer items-start gap-2.5 rounded-md p-2 text-sm hover:bg-secondary">
                   <input
                     type="checkbox"
                     checked={checked}
                     disabled={checked && selectedIds.length === 1}
                     tabIndex={sidebarOpen ? 0 : -1}
+                    className="mt-1 accent-primary"
                     onChange={() =>
                       setSelection(checked ? selectedIds.filter((x) => x !== doc.id) : [...selectedIds, doc.id])
                     }
                   />
                   <span>
-                    <span className="name">{doc.filename}</span>
-                    <span className="meta" style={{ display: "block" }}>
+                    <span className="block break-words leading-snug">{doc.filename}</span>
+                    <span className="block break-words text-xs text-muted-foreground">
                       {plural(doc.page_count ?? 0, "page")}
                       {doc.is_sample && " · sample"}
                     </span>
@@ -423,8 +477,8 @@ export function Workspace() {
                 </label>
               );
             })}
-            <div className="sidebar-foot">
-              <Link to="/" className="small" tabIndex={sidebarOpen ? 0 : -1}>
+            <div className="mt-4 px-2">
+              <Link to="/" className="text-sm" tabIndex={sidebarOpen ? 0 : -1}>
                 Upload another PDF
               </Link>
             </div>

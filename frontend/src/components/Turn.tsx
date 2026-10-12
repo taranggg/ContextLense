@@ -4,6 +4,7 @@ import type { ChatResponse, Citation, RetrievedChunk } from "../api/types";
 import { formatMs, formatPages, plural } from "../lib/format";
 import { AnswerText } from "./AnswerText";
 import { Notice } from "./common";
+import { Button } from "@/components/ui/button";
 
 export interface ChatTurn {
   id: string;
@@ -20,16 +21,20 @@ function SourceItem({ citation, onOpen }: { citation: Citation; onOpen: () => vo
   const spansMore = citation.pages.length > citation.excerpt_pages.length;
   return (
     <li>
-      <button type="button" className="source-item" onClick={onOpen}>
-        <span className="source-label">{citation.source_label}</span>
+      <button
+        type="button"
+        className="grid w-full grid-cols-[auto_1fr] gap-3 rounded-lg border border-border bg-card p-3.5 text-left transition-colors hover:border-foreground/20"
+        onClick={onOpen}
+      >
+        <span className="grid h-5 min-w-[26px] place-items-center rounded-md bg-accent px-1.5 text-[11px] font-semibold text-accent-foreground">
+          {citation.source_label}
+        </span>
         <span>
-          <span className="source-head">
-            {citation.document_name} <span className="muted">· {formatPages(citation.excerpt_pages)}</span>
-            {spansMore && <span className="muted small"> (passage spans {formatPages(citation.pages)})</span>}
+          <span className="break-words text-[13px] font-medium text-foreground">
+            {citation.document_name} <span className="font-normal text-muted-foreground">· {formatPages(citation.excerpt_pages)}</span>
+            {spansMore && <span className="text-xs font-normal text-muted-foreground"> (passage spans {formatPages(citation.pages)})</span>}
           </span>
-          <span className="excerpt" style={{ display: "block" }}>
-            “{citation.excerpt}”
-          </span>
+          <span className="mt-1 block text-sm leading-normal text-foreground/80">“{citation.excerpt}”</span>
         </span>
       </button>
     </li>
@@ -52,24 +57,26 @@ export function Turn({ turn, onInspect, onRetry }: Props) {
   const text = response?.answer ?? turn.partial;
 
   return (
-    <>
-      <div className="msg msg-user">
-        <div className="bubble">{turn.question}</div>
+    <div className="animate-fade-in-up [&+&]:mt-7">
+      <div className="flex justify-end">
+        <div className="max-w-[82%] whitespace-pre-wrap break-words rounded-[20px] bg-secondary px-4 py-2.5">{turn.question}</div>
       </div>
-      <div className="msg msg-assistant" aria-live={turn.status === "done" ? undefined : "polite"}>
+      <div className="mt-7" aria-live={turn.status === "done" ? undefined : "polite"}>
         {turn.status === "retrieving" && (
-          <div className="thinking">
-            <span className="spinner" aria-hidden="true" /> Searching the document…
+          <div className="flex items-center gap-2.5 text-[15px] text-muted-foreground">
+            <span className="size-3.5 shrink-0 animate-spin rounded-full border-2 border-secondary border-t-foreground/60" aria-hidden="true" /> Searching
+            the document…
           </div>
         )}
         {turn.status === "generating" && !turn.partial && (
-          <div className="thinking">
-            <span className="spinner" aria-hidden="true" /> Reading {plural(retrieved.length, "passage")}…
+          <div className="flex items-center gap-2.5 text-[15px] text-muted-foreground">
+            <span className="size-3.5 shrink-0 animate-spin rounded-full border-2 border-secondary border-t-foreground/60" aria-hidden="true" /> Reading{" "}
+            {plural(retrieved.length, "passage")}…
           </div>
         )}
 
         {response?.abstained && (
-          <div className="abstain">
+          <div className="mb-1.5 inline-flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-400">
             <AlertTriangle size={13} aria-hidden="true" /> Not enough evidence in the selected documents
           </div>
         )}
@@ -88,9 +95,9 @@ export function Turn({ turn, onInspect, onRetry }: Props) {
             tone="error"
             actions={
               turn.error.code !== "document_not_found" && (
-                <button type="button" className="btn btn-secondary btn-sm" onClick={onRetry}>
+                <Button variant="secondary" size="sm" onClick={onRetry}>
                   <RotateCcw size={14} aria-hidden="true" /> Try again
-                </button>
+                </Button>
               )
             }
           >
@@ -99,13 +106,18 @@ export function Turn({ turn, onInspect, onRetry }: Props) {
         )}
 
         {response && response.citations.length > 0 && (
-          <div className="sources">
-            <button type="button" className="sources-toggle" aria-expanded={sourcesOpen} onClick={() => setSourcesOpen((o) => !o)}>
+          <div className="mt-4">
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 py-1 text-[13px] font-medium text-foreground/80 hover:text-foreground"
+              aria-expanded={sourcesOpen}
+              onClick={() => setSourcesOpen((o) => !o)}
+            >
               {sourcesOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
               Sources ({response.citations.length})
             </button>
             {sourcesOpen && (
-              <ul className="source-list">
+              <ul className="mt-2 grid list-none gap-2 p-0">
                 {response.citations.map((c) => (
                   <SourceItem key={c.source_label} citation={c} onOpen={() => onInspect(c.source_label)} />
                 ))}
@@ -115,13 +127,13 @@ export function Turn({ turn, onInspect, onRetry }: Props) {
         )}
 
         {response && !response.abstained && response.citations.length === 0 && !response.cancelled && (
-          <div style={{ marginTop: 12 }}>
+          <div className="mt-3">
             <Notice tone="warn">This answer has no citations. Check the retrieved passages before relying on it.</Notice>
           </div>
         )}
 
         {(response || turn.status === "cancelled") && (
-          <div className="msg-meta">
+          <div className="mt-3 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-xs text-muted-foreground">
             {turn.status === "cancelled" && <span>Stopped</span>}
             {response && (
               <>
@@ -137,13 +149,13 @@ export function Turn({ turn, onInspect, onRetry }: Props) {
               </>
             )}
             {retrieved.length > 0 && (
-              <button type="button" className="link-btn" onClick={() => onInspect(null)}>
+              <button type="button" className="border-none bg-none p-0 text-primary hover:underline" onClick={() => onInspect(null)}>
                 Inspect retrieval
               </button>
             )}
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

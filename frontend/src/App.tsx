@@ -7,10 +7,12 @@ import { Workspace } from "./pages/Workspace";
 
 function NotFound() {
   return (
-    <main className="page page-narrow">
-      <h1 style={{ fontSize: 28 }}>Page not found</h1>
-      <p style={{ marginTop: 12 }}>
-        <Link to="/">Back to documents</Link>
+    <main className="mx-auto max-w-[760px] px-6 pb-24 pt-[72px]">
+      <h1 className="text-[28px] font-semibold">Page not found</h1>
+      <p className="mt-3">
+        <Link to="/" className="text-primary hover:underline">
+          Back to documents
+        </Link>
       </p>
     </main>
   );

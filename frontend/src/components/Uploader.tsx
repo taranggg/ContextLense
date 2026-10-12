@@ -6,6 +6,9 @@ import type { DocumentInfo } from "../api/types";
 import { formatBytes, plural } from "../lib/format";
 import { isProcessing } from "../lib/hooks";
 import { Notice, PIPELINE_STEPS, StatusPill } from "./common";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 
 /** One file in the current batch: rejected before upload, rejected by the server, or a document being processed. */
 interface Item {
@@ -132,14 +135,17 @@ export function Uploader({ maxMb, maxFiles, onChange }: { maxMb: number; maxFile
   const currentIndex = PIPELINE_STEPS.findIndex((s) => s.key === (currentKey === "queued" ? "extracting" : currentKey));
 
   const browse = (
-    <button type="button" className="btn btn-secondary" onClick={() => input.current?.click()} disabled={busy}>
+    <Button variant="secondary" onClick={() => input.current?.click()} disabled={busy}>
       Browse files
-    </button>
+    </Button>
   );
 
   return (
     <div
-      className={`dropzone${dragging ? " dragging" : ""}`}
+      className={cn(
+        "mt-12 flex min-h-[260px] flex-col items-center justify-center gap-3 rounded-2xl border-[1.5px] border-dashed border-border bg-card p-10 text-center transition-colors",
+        dragging && "border-primary bg-accent",
+      )}
       onDragOver={(e) => {
         e.preventDefault();
         if (!busy) setDragging(true);
@@ -152,7 +158,7 @@ export function Uploader({ maxMb, maxFiles, onChange }: { maxMb: number; maxFile
         type="file"
         accept="application/pdf,.pdf"
         multiple
-        className="visually-hidden"
+        className="sr-only"
         tabIndex={-1}
         onChange={(e) => {
           const files = Array.from(e.target.files ?? []);
@@ -162,52 +168,52 @@ export function Uploader({ maxMb, maxFiles, onChange }: { maxMb: number; maxFile
       />
 
       {items.length > 0 ? (
-        <div className="upload-card" aria-live="polite">
-          <ul className="upload-items">
+        <div className="w-full max-w-[520px] text-left" aria-live="polite">
+          <ul className="m-0 grid list-none gap-2.5 p-0">
             {items.map((item) => (
               <li key={item.key}>
-                <div className="upload-name">
-                  <FileText size={18} aria-hidden="true" />
-                  <span className="upload-filename">{item.name}</span>
-                  <span className="muted small">{formatBytes(item.size)}</span>
-                  <span className="header-spacer" />
-                  <span className="upload-status small">
+                <div className="flex items-center gap-2.5 text-[15px] font-medium">
+                  <FileText size={18} className="shrink-0" aria-hidden="true" />
+                  <span className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap">{item.name}</span>
+                  <span className="shrink-0 text-xs font-normal text-muted-foreground">{formatBytes(item.size)}</span>
+                  <span className="shrink-0 text-xs font-normal">
                     {item.error ? (
-                      <span className="upload-error">Not uploaded</span>
+                      <span className="text-destructive">Not uploaded</span>
                     ) : item.doc ? (
                       <StatusPill status={item.doc.status} />
                     ) : (
-                      <span className="muted">Uploading…</span>
+                      <span className="text-muted-foreground">Uploading…</span>
                     )}
                   </span>
                 </div>
                 {(item.error || (item.doc?.status === "failed" && item.doc.error_message)) && (
-                  <p className="upload-item-error">{item.error ?? item.doc?.error_message}</p>
+                  <p className="ml-7 mt-0.5 text-[13px] text-destructive">{item.error ?? item.doc?.error_message}</p>
                 )}
               </li>
             ))}
           </ul>
 
           {state.phase === "uploading" && (
-            <div className="upload-progress-row">
-              <div className="progress" style={{ flex: 1 }}>
-                <span style={{ width: `${Math.round(state.progress * 100)}%` }} />
-              </div>
-              <button type="button" className="icon-btn" onClick={state.abort} aria-label="Cancel upload">
+            <div className="mt-4 flex items-center gap-2">
+              <Progress value={Math.round(state.progress * 100)} className="flex-1" />
+              <Button variant="ghost" size="icon" onClick={state.abort} aria-label="Cancel upload">
                 <X size={16} />
-              </button>
+              </Button>
             </div>
           )}
           {state.phase === "tracking" && pending && (
-            <div className="progress indeterminate">
-              <span />
+            <div className="mt-4">
+              <Progress indeterminate />
             </div>
           )}
 
           {single && !single.error && busy && (
-            <ol className="steps">
+            <ol className="m-0 mt-3.5 flex flex-wrap gap-x-4 gap-y-1 p-0 text-[13px] text-muted-foreground">
               {PIPELINE_STEPS.map((step, i) => (
-                <li key={step.key} className={i < currentIndex ? "done" : i === currentIndex ? "current" : ""}>
+                <li
+                  key={step.key}
+                  className={cn("inline-flex items-center gap-1.5", i < currentIndex && "text-foreground/80", i === currentIndex && "font-medium text-foreground")}
+                >
                   {i < currentIndex && <Check size={13} aria-hidden="true" />}
                   {step.label}
                 </li>
@@ -216,28 +222,28 @@ export function Uploader({ maxMb, maxFiles, onChange }: { maxMb: number; maxFile
           )}
 
           {finished && (
-            <div className="upload-actions">
+            <div className="mt-4.5 flex justify-end gap-2">
               {readyIds.length > 0 && (
-                <button type="button" className="btn btn-primary btn-sm" onClick={() => navigate(workspaceUrl(readyIds))}>
+                <Button size="sm" onClick={() => navigate(workspaceUrl(readyIds))}>
                   Open {readyIds.length > 1 ? plural(readyIds.length, "document") : "document"}
-                </button>
+                </Button>
               )}
-              <button type="button" className="btn btn-ghost btn-sm" onClick={() => setState({ phase: "idle" })}>
+              <Button variant="ghost" size="sm" onClick={() => setState({ phase: "idle" })}>
                 Upload more
-              </button>
+              </Button>
             </div>
           )}
         </div>
       ) : (
         <>
-          <FileUp size={32} strokeWidth={1.5} className="dropzone-icon" aria-hidden="true" />
-          <p className="dropzone-title">Drop PDFs here</p>
+          <FileUp size={32} strokeWidth={1.5} className="text-muted-foreground" aria-hidden="true" />
+          <p className="text-[19px] font-medium">Drop PDFs here</p>
           {browse}
-          <p className="dropzone-hint">
+          <p className="text-[13px] text-muted-foreground">
             Up to {maxFiles} PDFs at a time · {maxMb} MB each · selectable text only (scanned pages are not supported)
           </p>
           {state.phase === "idle" && state.message && (
-            <div className="upload-card" style={{ marginTop: 12 }}>
+            <div className="mt-3 w-full max-w-[520px]">
               <Notice tone="error">{state.message}</Notice>
             </div>
           )}

@@ -1,9 +1,13 @@
-import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { api, ApiError } from "../api/client";
 import type { ChatResponse, ChunkPage, DocumentInfo, RetrievedChunk } from "../api/types";
 import { formatMs, formatPages } from "../lib/format";
 import { Notice, Similarity } from "./common";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 
 export type InspectorTab = "passages" | "details" | "document";
 
@@ -17,18 +21,28 @@ function Passage({ chunk, cited, focused }: { chunk: RetrievedChunk; cited: bool
     }
   }, [focused]);
   return (
-    <li ref={ref} className={`passage${focused ? " focused" : ""}`} style={{ listStyle: "none" }}>
-      <div className="passage-head">
-        <span className="source-label">{chunk.source_label}</span>
-        <span className="doc">{chunk.document_name}</span>
-        <span className="muted">{formatPages(chunk.pages)}</span>
-        {cited && <span className="tag">Cited</span>}
+    <li
+      ref={ref}
+      className={cn(
+        "list-none border-b border-border py-3.5 first:pt-1",
+        focused && "-mx-3 rounded-lg border-b-transparent bg-accent px-3 py-3.5",
+      )}
+    >
+      <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[13px]">
+        <span className="grid h-5 min-w-[26px] place-items-center rounded-md bg-accent px-1.5 text-[11px] font-semibold text-accent-foreground">
+          {chunk.source_label}
+        </span>
+        <span className="break-words font-medium">{chunk.document_name}</span>
+        <span className="text-muted-foreground">{formatPages(chunk.pages)}</span>
+        {cited && <Badge>Cited</Badge>}
       </div>
-      <div style={{ marginTop: 6 }}>
+      <div className="mt-1.5">
         <Similarity value={chunk.similarity} />
       </div>
-      <p className={`passage-text${expanded ? "" : " clamped"}`}>{chunk.text}</p>
-      <button type="button" className="link-btn small" style={{ marginTop: 6 }} onClick={() => setExpanded((e) => !e)}>
+      <p className={cn("mt-2 whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground/80", !expanded && "line-clamp-6")}>
+        {chunk.text}
+      </p>
+      <button type="button" className="mt-1.5 border-none bg-none p-0 text-sm text-primary hover:underline" onClick={() => setExpanded((e) => !e)}>
         {expanded ? "Show less" : "Show full passage"}
       </button>
     </li>
@@ -58,52 +72,51 @@ function DocumentChunks({ documents }: { documents: DocumentInfo[] }) {
   return (
     <div>
       {documents.length > 1 && (
-        <select
-          className="select"
+        <Select
           value={docId}
           aria-label="Document"
+          className="mb-3 w-full"
           onChange={(e) => {
             setDocId(e.target.value);
             setOffset(0);
           }}
-          style={{ marginBottom: 12, width: "100%" }}
         >
           {documents.map((d) => (
             <option key={d.id} value={d.id}>
               {d.filename}
             </option>
           ))}
-        </select>
+        </Select>
       )}
-      <p className="small muted">
+      <p className="text-sm text-muted-foreground">
         Every passage indexed for this document, in reading order. The same passages are used for every question and every
         retrieval depth.
       </p>
       {error && <Notice tone="error">{error}</Notice>}
       {page && (
         <>
-          <ul style={{ padding: 0, margin: "12px 0 0" }}>
+          <ul className="m-0 mt-3 list-none p-0">
             {page.chunks.map((c) => (
-              <li key={c.chunk_id} className="passage" style={{ listStyle: "none" }}>
-                <div className="passage-head">
-                  <span className="tag">#{c.index + 1}</span>
-                  <span className="muted">{formatPages(c.pages)}</span>
-                  <span className="muted">{c.word_count} words</span>
+              <li key={c.chunk_id} className="list-none border-b border-border py-3.5">
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[13px]">
+                  <Badge>#{c.index + 1}</Badge>
+                  <span className="text-muted-foreground">{formatPages(c.pages)}</span>
+                  <span className="text-muted-foreground">{c.word_count} words</span>
                 </div>
-                <p className="passage-text clamped">{c.text}</p>
+                <p className="mt-2 line-clamp-6 whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground/80">{c.text}</p>
               </li>
             ))}
           </ul>
-          <div className="pager">
-            <button type="button" className="btn btn-ghost btn-sm" disabled={offset === 0} onClick={() => setOffset(Math.max(0, offset - limit))}>
+          <div className="mt-4 flex items-center justify-between text-sm">
+            <Button variant="ghost" size="sm" disabled={offset === 0} onClick={() => setOffset(Math.max(0, offset - limit))}>
               Previous
-            </button>
-            <span className="muted tabular">
+            </Button>
+            <span className="tabular-nums text-muted-foreground">
               {page.total ? `${offset + 1}–${Math.min(offset + limit, page.total)} of ${page.total}` : "No passages"}
             </span>
-            <button type="button" className="btn btn-ghost btn-sm" disabled={offset + limit >= page.total} onClick={() => setOffset(offset + limit)}>
+            <Button variant="ghost" size="sm" disabled={offset + limit >= page.total} onClick={() => setOffset(offset + limit)}>
               Next
-            </button>
+            </Button>
           </div>
         </>
       )}
@@ -122,14 +135,6 @@ interface Props {
 }
 
 export function Inspector({ tab, onTab, onClose, retrieved, response, focus, documents }: Props) {
-  const closeRef = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    closeRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   const cited = new Set(response?.citations.map((c) => c.source_label) ?? []);
   const tabs: [InspectorTab, string][] = retrieved
     ? [
@@ -140,26 +145,32 @@ export function Inspector({ tab, onTab, onClose, retrieved, response, focus, doc
     : [["document", "All passages"]];
 
   return (
-    <>
-      <div className="drawer-backdrop" onClick={onClose} aria-hidden="true" />
-      <aside className="drawer" role="dialog" aria-modal="true" aria-label="Source inspector">
-        <div className="drawer-head">
-          <h2>Source inspector</h2>
-          <button ref={closeRef} type="button" className="icon-btn" onClick={onClose} aria-label="Close inspector">
-            <X size={18} />
-          </button>
-        </div>
-        <div className="tabs" role="tablist">
+    <Sheet open onOpenChange={(open) => !open && onClose()}>
+      <SheetContent aria-label="Source inspector" className="gap-0 p-0">
+        <SheetHeader>
+          <SheetTitle>Source inspector</SheetTitle>
+        </SheetHeader>
+        <div className="flex gap-1 border-b border-border px-4 pt-2.5" role="tablist">
           {tabs.map(([key, label]) => (
-            <button key={key} type="button" role="tab" className="tab" aria-selected={tab === key} onClick={() => onTab(key)}>
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={tab === key}
+              className={cn(
+                "-mb-px border-b-2 border-transparent px-2.5 py-2 text-[13px] text-muted-foreground",
+                tab === key && "border-foreground font-medium text-foreground",
+              )}
+              onClick={() => onTab(key)}
+            >
               {label}
             </button>
           ))}
         </div>
-        <div className="drawer-body" role="tabpanel">
+        <div className="flex-1 overflow-y-auto px-5 py-4 pb-8" role="tabpanel">
           {tab === "passages" && retrieved && (
             <>
-              <p className="small muted" style={{ marginBottom: 12 }}>
+              <p className="mb-3 text-sm text-muted-foreground">
                 The passages given to the model for this answer, ranked by similarity to the question. Similarity measures how
                 close a passage is to the question — it does not prove the passage supports the answer.
               </p>
@@ -169,7 +180,7 @@ export function Inspector({ tab, onTab, onClose, retrieved, response, focus, doc
                   were included (the last one may be shortened).
                 </Notice>
               )}
-              <ul style={{ padding: 0, margin: 0 }}>
+              <ul className="m-0 list-none p-0">
                 {retrieved.map((chunk) => (
                   <Passage key={chunk.chunk_id} chunk={chunk} cited={cited.has(chunk.source_label)} focused={focus === chunk.source_label} />
                 ))}
@@ -178,35 +189,35 @@ export function Inspector({ tab, onTab, onClose, retrieved, response, focus, doc
           )}
           {tab === "details" && response && (
             <>
-              <section className="drawer-section">
-                <h3>Timing</h3>
-                <dl className="kv">
-                  <dt>Retrieval</dt>
-                  <dd className="tabular">{formatMs(response.latency.retrieval_ms)}</dd>
-                  <dt>Generation</dt>
-                  <dd className="tabular">{formatMs(response.latency.generation_ms)}</dd>
-                  <dt>Total</dt>
-                  <dd className="tabular">{formatMs(response.latency.total_ms)}</dd>
+              <section>
+                <h3 className="mb-2.5 text-[13px] font-semibold">Timing</h3>
+                <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[13px]">
+                  <dt className="text-muted-foreground">Retrieval</dt>
+                  <dd className="tabular-nums">{formatMs(response.latency.retrieval_ms)}</dd>
+                  <dt className="text-muted-foreground">Generation</dt>
+                  <dd className="tabular-nums">{formatMs(response.latency.generation_ms)}</dd>
+                  <dt className="text-muted-foreground">Total</dt>
+                  <dd className="tabular-nums">{formatMs(response.latency.total_ms)}</dd>
                 </dl>
               </section>
-              <section className="drawer-section">
-                <h3>Generation</h3>
-                <dl className="kv">
-                  <dt>Model</dt>
-                  <dd className="mono">{response.model.model}</dd>
-                  <dt>Runtime</dt>
+              <section className="mt-6">
+                <h3 className="mb-2.5 text-[13px] font-semibold">Generation</h3>
+                <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[13px]">
+                  <dt className="text-muted-foreground">Model</dt>
+                  <dd className="font-mono text-[0.86em]">{response.model.model}</dd>
+                  <dt className="text-muted-foreground">Runtime</dt>
                   <dd>{response.model.runtime.toUpperCase()}</dd>
-                  <dt>Temperature</dt>
+                  <dt className="text-muted-foreground">Temperature</dt>
                   <dd>{response.model.temperature}</dd>
-                  <dt>Passages (K)</dt>
+                  <dt className="text-muted-foreground">Passages (K)</dt>
                   <dd>
                     {response.k} requested · {response.retrieved.length} retrieved · {response.generation.sources_in_prompt} in prompt
                   </dd>
-                  <dt>Prompt tokens</dt>
-                  <dd className="tabular">{response.generation.prompt_tokens?.toLocaleString() ?? "—"}</dd>
-                  <dt>Answer tokens</dt>
-                  <dd className="tabular">{response.generation.completion_tokens?.toLocaleString() ?? "—"}</dd>
-                  <dt>Stopped because</dt>
+                  <dt className="text-muted-foreground">Prompt tokens</dt>
+                  <dd className="tabular-nums">{response.generation.prompt_tokens?.toLocaleString() ?? "—"}</dd>
+                  <dt className="text-muted-foreground">Answer tokens</dt>
+                  <dd className="tabular-nums">{response.generation.completion_tokens?.toLocaleString() ?? "—"}</dd>
+                  <dt className="text-muted-foreground">Stopped because</dt>
                   <dd>
                     {response.generation.finish_reason === "length"
                       ? "token limit reached (answer may be cut off)"
@@ -214,9 +225,9 @@ export function Inspector({ tab, onTab, onClose, retrieved, response, focus, doc
                   </dd>
                 </dl>
               </section>
-              <section className="drawer-section">
-                <h3>Citations</h3>
-                <p className="small">
+              <section className="mt-6">
+                <h3 className="mb-2.5 text-[13px] font-semibold">Citations</h3>
+                <p className="text-sm">
                   {response.citations.length} of {response.retrieved.length} passages cited.
                   {response.invalid_citations.length > 0 &&
                     ` The answer also contains ${response.invalid_citations.join(", ")}, which do not match any supplied passage.`}
@@ -226,7 +237,7 @@ export function Inspector({ tab, onTab, onClose, retrieved, response, focus, doc
           )}
           {tab === "document" && <DocumentChunks documents={documents} />}
         </div>
-      </aside>
-    </>
+      </SheetContent>
+    </Sheet>
   );
 }
