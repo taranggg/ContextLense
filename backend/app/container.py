@@ -36,7 +36,7 @@ def build_container(
     llm: Optional[LLMBackend] = None,
 ) -> Container:
     settings.ensure_dirs()
-    store = MetadataStore(settings.db_path)
+    store = MetadataStore(settings.database_url, schema=settings.database_schema)
     embedder = embedder or SentenceTransformerEmbedder(settings.embedding_model, settings.embedding_batch_size)
     retrieval = RetrievalService(settings.documents_dir, embedder)
     documents = DocumentService(settings, store, embedder, retrieval)

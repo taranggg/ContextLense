@@ -139,6 +139,7 @@ class DocumentService:
             self._deleted.add(doc_id)
         self.store.delete_document(doc_id)
         self.store.delete_comparisons_for_document(doc_id)
+        self.store.delete_conversations_for_document(doc_id)
         self.retrieval.evict(doc_id)
         DocumentFiles(self.settings.documents_dir, doc_id).remove_all()
         logger.info("Deleted document %s and its derived data", doc_id)

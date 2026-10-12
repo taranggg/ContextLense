@@ -165,6 +165,40 @@ class ChatResponse(BaseModel):
     cancelled: bool = False
 
 
+# --------------------------------------------------------------------------- conversations (chat memory)
+
+
+class SavedTurn(BaseModel):
+    id: str
+    question: str
+    k: int
+    status: Literal["done", "cancelled"]
+    response: Optional[ChatResponse] = None
+    created_at: str
+
+
+class Conversation(BaseModel):
+    document_ids: list[str]
+    document_names: list[str]
+    title: str
+    turns: list[SavedTurn]
+    created_at: str
+    updated_at: str
+
+
+class ConversationSummary(BaseModel):
+    document_ids: list[str]
+    document_names: list[str]
+    title: str
+    turn_count: int
+    created_at: str
+    updated_at: str
+
+
+class ConversationList(BaseModel):
+    conversations: list[ConversationSummary]
+
+
 # --------------------------------------------------------------------------- health
 
 

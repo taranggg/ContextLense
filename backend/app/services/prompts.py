@@ -41,14 +41,28 @@ def format_pages(pages: list[int]) -> str:
     return "pages " + ", ".join(str(p) for p in pages)
 
 
-def build_rag_messages(question: str, sources: list[RetrievedChunk], texts: list[str] | None = None) -> list[dict[str, str]]:
-    """`texts` optionally overrides each source's text (used when trimming to fit the context window)."""
+def build_rag_messages(
+    question: str,
+    sources: list[RetrievedChunk],
+    texts: list[str] | None = None,
+    history: list[tuple[str, str]] | None = None,
+) -> list[dict[str, str]]:
+    """
+    `texts` optionally overrides each source's text (used when trimming to fit the context window).
+    `history` is prior (question, answer) pairs from the same conversation, oldest first, added as
+    separate turns so the model can resolve follow-ups ("what about page 2?") against them.
+    """
     blocks = []
     for i, src in enumerate(sources):
         text = texts[i] if texts is not None else src.text
         blocks.append(f"[{src.source_label}] {src.document_name}, {format_pages(src.pages)}\n{text}")
     user = "Sources:\n\n" + "\n\n".join(blocks) + f"\n\nQuestion: {question}"
-    return [{"role": "system", "content": RAG_SYSTEM_PROMPT}, {"role": "user", "content": user}]
+    messages = [{"role": "system", "content": RAG_SYSTEM_PROMPT}]
+    for prior_question, prior_answer in history or []:
+        messages.append({"role": "user", "content": prior_question})
+        messages.append({"role": "assistant", "content": prior_answer})
+    messages.append({"role": "user", "content": user})
+    return messages
 
 
 def build_no_rag_messages(question: str) -> list[dict[str, str]]:

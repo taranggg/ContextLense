@@ -119,6 +119,33 @@ export interface ChatResponse {
   cancelled: boolean;
 }
 
+export interface SavedTurn {
+  id: string;
+  question: string;
+  k: number;
+  status: "done" | "cancelled";
+  response: ChatResponse | null;
+  created_at: string;
+}
+
+export interface Conversation {
+  document_ids: string[];
+  document_names: string[];
+  title: string;
+  turns: SavedTurn[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ConversationSummary {
+  document_ids: string[];
+  document_names: string[];
+  title: string;
+  turn_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export type ComponentState =
   | "ready"
   | "loading"

@@ -2,19 +2,26 @@
 Test fixtures. Tests never download or run a real model: the embedder is a
 deterministic bag-of-words hash and the LLM is a scripted fake. The application
 itself has no fake-answer path; these fakes exist only here.
+
+Tests talk to the real Postgres from `docker compose up -d` (DATABASE_URL env
+var, defaulting to the local dev instance); each test gets its own schema so
+they don't interfere with each other or with data from the running app.
 """
 from __future__ import annotations
 
 import hashlib
 import re
 import time
+import uuid
 from pathlib import Path
 from typing import Callable, Optional
 
 import numpy as np
+import psycopg
 import pymupdf
 import pytest
 from fastapi.testclient import TestClient
+from psycopg import sql
 
 from backend.app.config import Settings
 from backend.app.container import build_container
@@ -89,14 +96,19 @@ def words(prefix: str, n: int) -> str:
 
 @pytest.fixture
 def settings(tmp_path: Path) -> Settings:
-    return Settings(
+    schema = f"test_{uuid.uuid4().hex}"
+    s = Settings(
         data_dir=tmp_path / "data",
         results_dir=tmp_path / "results",
+        database_schema=schema,
         llm_preload=False,
         chunk_size_words=120,
         chunk_overlap_words=20,
         llm_context_tokens=100_000,
     )
+    yield s
+    with psycopg.connect(s.database_url, autocommit=True) as conn:
+        conn.execute(sql.SQL("DROP SCHEMA IF EXISTS {} CASCADE").format(sql.Identifier(schema)))
 
 
 @pytest.fixture

@@ -44,9 +44,8 @@ results/cache/
 .vscode/
 .idea/
 
-# ContextLens user data (uploaded PDFs, derived indexes, metadata)
+# ContextLens user data (uploaded PDFs, derived indexes)
 data/documents/
-data/contextlens.db*
 
 # Frontend build
 frontend/dist/

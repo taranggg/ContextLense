@@ -1,5 +1,5 @@
 """
-Persistent metadata for documents and research comparisons (SQLite).
+Persistent metadata for documents and research comparisons (PostgreSQL).
 
 Large derived artifacts (pages, chunks, vectors) live as files under
 `<DATA_DIR>/documents/<document_id>/`; this store only holds metadata and
@@ -8,21 +8,24 @@ processing status so that everything survives a backend restart.
 from __future__ import annotations
 
 import json
-import sqlite3
 import threading
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any, Optional
+
+import psycopg
+from psycopg import sql
+from psycopg.rows import dict_row
 
 from ..schemas import DocumentInfo, DocumentStatus
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS documents (
+    seq BIGSERIAL,
     id TEXT PRIMARY KEY,
     filename TEXT NOT NULL,
     status TEXT NOT NULL,
-    is_sample INTEGER NOT NULL DEFAULT 0,
-    size_bytes INTEGER NOT NULL,
+    is_sample BOOLEAN NOT NULL DEFAULT FALSE,
+    size_bytes BIGINT NOT NULL,
     page_count INTEGER,
     pages_with_text INTEGER,
     chunk_count INTEGER,
@@ -37,11 +40,21 @@ CREATE TABLE IF NOT EXISTS documents (
     updated_at TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS comparisons (
+    seq BIGSERIAL,
     id TEXT PRIMARY KEY,
     created_at TEXT NOT NULL,
     question TEXT NOT NULL,
     document_ids TEXT NOT NULL,
     payload TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS conversations (
+    seq BIGSERIAL,
+    key TEXT PRIMARY KEY,
+    document_ids TEXT NOT NULL,
+    title TEXT NOT NULL,
+    turns TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
 );
 """
 
@@ -57,15 +70,16 @@ def now_iso() -> str:
 
 
 class MetadataStore:
-    def __init__(self, db_path: Path):
-        self.db_path = db_path
-        db_path.parent.mkdir(parents=True, exist_ok=True)
+    def __init__(self, database_url: str, schema: Optional[str] = None):
+        self.database_url = database_url
+        self.schema = schema
         self._lock = threading.Lock()
-        self._conn = sqlite3.connect(str(db_path), check_same_thread=False)
-        self._conn.row_factory = sqlite3.Row
+        self._conn = psycopg.connect(database_url, autocommit=False, row_factory=dict_row)
         with self._lock:
-            self._conn.execute("PRAGMA journal_mode=WAL")
-            self._conn.executescript(_SCHEMA)
+            if schema:
+                self._conn.execute(sql.SQL("CREATE SCHEMA IF NOT EXISTS {}").format(sql.Identifier(schema)))
+                self._conn.execute(sql.SQL("SET search_path TO {}").format(sql.Identifier(schema)))
+            self._conn.execute(_SCHEMA)
             self._conn.commit()
 
     def close(self) -> None:
@@ -79,8 +93,8 @@ class MetadataStore:
         with self._lock:
             self._conn.execute(
                 "INSERT INTO documents (id, filename, status, is_sample, size_bytes, created_at, updated_at) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (doc_id, filename, DocumentStatus.queued.value, int(is_sample), size_bytes, ts, ts),
+                "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                (doc_id, filename, DocumentStatus.queued.value, is_sample, size_bytes, ts, ts),
             )
             self._conn.commit()
         doc = self.get_document(doc_id)
@@ -95,37 +109,35 @@ class MetadataStore:
             fields["status"] = fields["status"].value
         if "warnings" in fields:
             fields["warnings"] = json.dumps(fields["warnings"])
-        if "is_sample" in fields:
-            fields["is_sample"] = int(fields["is_sample"])
         fields["updated_at"] = now_iso()
-        assignments = ", ".join(f"{k} = ?" for k in fields)
+        assignments = ", ".join(f"{k} = %s" for k in fields)
         with self._lock:
-            self._conn.execute(f"UPDATE documents SET {assignments} WHERE id = ?", (*fields.values(), doc_id))
+            self._conn.execute(f"UPDATE documents SET {assignments} WHERE id = %s", (*fields.values(), doc_id))
             self._conn.commit()
 
     def get_document(self, doc_id: str) -> Optional[DocumentInfo]:
         with self._lock:
-            row = self._conn.execute("SELECT * FROM documents WHERE id = ?", (doc_id,)).fetchone()
+            row = self._conn.execute("SELECT * FROM documents WHERE id = %s", (doc_id,)).fetchone()
         return _row_to_doc(row) if row else None
 
     def list_documents(self) -> list[DocumentInfo]:
         with self._lock:
-            rows = self._conn.execute("SELECT * FROM documents ORDER BY created_at DESC, rowid DESC").fetchall()
+            rows = self._conn.execute("SELECT * FROM documents ORDER BY created_at DESC, seq DESC").fetchall()
         return [_row_to_doc(r) for r in rows]
 
     def delete_document(self, doc_id: str) -> bool:
         with self._lock:
-            cur = self._conn.execute("DELETE FROM documents WHERE id = ?", (doc_id,))
+            cur = self._conn.execute("DELETE FROM documents WHERE id = %s", (doc_id,))
             self._conn.commit()
             return cur.rowcount > 0
 
     def mark_interrupted(self) -> int:
         """Documents left mid-processing by a previous process cannot resume; mark them failed."""
         in_progress = [s.value for s in DocumentStatus if s not in (DocumentStatus.ready, DocumentStatus.failed)]
-        placeholders = ",".join("?" for _ in in_progress)
+        placeholders = ",".join("%s" for _ in in_progress)
         with self._lock:
             cur = self._conn.execute(
-                f"UPDATE documents SET status = ?, error_code = ?, error_message = ?, updated_at = ? "
+                f"UPDATE documents SET status = %s, error_code = %s, error_message = %s, updated_at = %s "
                 f"WHERE status IN ({placeholders})",
                 (
                     DocumentStatus.failed.value,
@@ -143,7 +155,7 @@ class MetadataStore:
     def save_comparison(self, comparison_id: str, created_at: str, question: str, document_ids: list[str], payload: dict) -> None:
         with self._lock:
             self._conn.execute(
-                "INSERT INTO comparisons (id, created_at, question, document_ids, payload) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO comparisons (id, created_at, question, document_ids, payload) VALUES (%s, %s, %s, %s, %s)",
                 (comparison_id, created_at, question, json.dumps(document_ids), json.dumps(payload)),
             )
             self._conn.commit()
@@ -151,13 +163,13 @@ class MetadataStore:
     def list_comparisons(self, limit: int = 50) -> list[dict]:
         with self._lock:
             rows = self._conn.execute(
-                "SELECT payload FROM comparisons ORDER BY created_at DESC, rowid DESC LIMIT ?", (limit,)
+                "SELECT payload FROM comparisons ORDER BY created_at DESC, seq DESC LIMIT %s", (limit,)
             ).fetchall()
         return [json.loads(r["payload"]) for r in rows]
 
     def get_comparison(self, comparison_id: str) -> Optional[dict]:
         with self._lock:
-            row = self._conn.execute("SELECT payload FROM comparisons WHERE id = ?", (comparison_id,)).fetchone()
+            row = self._conn.execute("SELECT payload FROM comparisons WHERE id = %s", (comparison_id,)).fetchone()
         return json.loads(row["payload"]) if row else None
 
     def delete_comparisons_for_document(self, doc_id: str) -> int:
@@ -166,13 +178,74 @@ class MetadataStore:
             rows = self._conn.execute("SELECT id, document_ids FROM comparisons").fetchall()
             ids = [r["id"] for r in rows if doc_id in json.loads(r["document_ids"])]
             for cid in ids:
-                self._conn.execute("DELETE FROM comparisons WHERE id = ?", (cid,))
+                self._conn.execute("DELETE FROM comparisons WHERE id = %s", (cid,))
             self._conn.commit()
         return len(ids)
 
+    # ------------------------------------------------------------------ conversations
 
-def _row_to_doc(row: sqlite3.Row) -> DocumentInfo:
+    @staticmethod
+    def _conv_key(document_ids: list[str]) -> str:
+        """One conversation per exact set of documents searched together, regardless of order."""
+        return ",".join(sorted(set(document_ids)))
+
+    def append_turn(self, document_ids: list[str], turn: dict) -> None:
+        key = self._conv_key(document_ids)
+        ts = now_iso()
+        with self._lock:
+            row = self._conn.execute("SELECT turns FROM conversations WHERE key = %s", (key,)).fetchone()
+            if row is None:
+                self._conn.execute(
+                    "INSERT INTO conversations (key, document_ids, title, turns, created_at, updated_at) "
+                    "VALUES (%s, %s, %s, %s, %s, %s)",
+                    (key, json.dumps(sorted(set(document_ids))), turn["question"][:120], json.dumps([turn]), ts, ts),
+                )
+            else:
+                turns = json.loads(row["turns"]) + [turn]
+                self._conn.execute(
+                    "UPDATE conversations SET turns = %s, updated_at = %s WHERE key = %s",
+                    (json.dumps(turns), ts, key),
+                )
+            self._conn.commit()
+
+    def get_conversation(self, document_ids: list[str]) -> Optional[dict]:
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT * FROM conversations WHERE key = %s", (self._conv_key(document_ids),)
+            ).fetchone()
+        return _row_to_conversation(row) if row else None
+
+    def list_conversations(self) -> list[dict]:
+        with self._lock:
+            rows = self._conn.execute("SELECT * FROM conversations ORDER BY updated_at DESC, seq DESC").fetchall()
+        return [_row_to_conversation(r) for r in rows]
+
+    def delete_conversation(self, document_ids: list[str]) -> bool:
+        with self._lock:
+            cur = self._conn.execute("DELETE FROM conversations WHERE key = %s", (self._conv_key(document_ids),))
+            self._conn.commit()
+            return cur.rowcount > 0
+
+    def delete_conversations_for_document(self, doc_id: str) -> int:
+        with self._lock:
+            rows = self._conn.execute("SELECT key, document_ids FROM conversations").fetchall()
+            keys = [r["key"] for r in rows if doc_id in json.loads(r["document_ids"])]
+            for key in keys:
+                self._conn.execute("DELETE FROM conversations WHERE key = %s", (key,))
+            self._conn.commit()
+        return len(keys)
+
+
+def _row_to_doc(row: dict) -> DocumentInfo:
     data = dict(row)
-    data["is_sample"] = bool(data["is_sample"])
+    data.pop("seq", None)
     data["warnings"] = json.loads(data.get("warnings") or "[]")
     return DocumentInfo(**data)
+
+
+def _row_to_conversation(row: dict) -> dict:
+    data = dict(row)
+    data.pop("seq", None)
+    data["document_ids"] = json.loads(data["document_ids"])
+    data["turns"] = json.loads(data["turns"])
+    return data

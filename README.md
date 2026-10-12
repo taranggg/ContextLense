@@ -47,7 +47,8 @@ cp .env.example .env
 hf download mlx-community/Qwen3-4B-Instruct-2507-4bit
 (cd frontend && pnpm install)
 
-# every time — two terminals
+# every time — one command, then two terminals
+docker compose up -d                                          # Postgres (metadata database)
 uvicorn backend.app.main:app --host 127.0.0.1 --port 8000   # terminal 1: backend
 cd frontend && pnpm dev                                       # terminal 2: frontend
 ```
@@ -64,6 +65,7 @@ Then open **<http://localhost:5173>**.
 | Python | 3.12 recommended (verified with 3.12.11); 3.11 should also work |
 | Node.js | 20 or newer (verified with 24.4) |
 | pnpm | Required for the frontend (verified with 11.9). Install with `corepack enable` or `npm install -g pnpm`. `npm install` is deliberately blocked so that `pnpm-lock.yaml` stays the single lockfile. |
+| Docker | Needed to run the Postgres metadata database locally (`docker compose up -d`). Any Docker-compatible engine works, e.g. [OrbStack](https://orbstack.dev) on macOS. |
 | Disk space | About 3 GB: 2.3 GB for the language model and about 100 MB for the embedding model |
 
 ---
@@ -92,7 +94,19 @@ cp .env.example .env
 The defaults work without changes. The available settings are described in
 [Configuration](#configuration).
 
-### Step 3 — Download the local language model (about 2.3 GB, one time)
+### Step 3 — Start the metadata database
+
+```bash
+docker compose up -d
+```
+
+This starts a local Postgres container (via Docker — on macOS, [OrbStack](https://orbstack.dev) works
+as the Docker engine) on `localhost:5432` with the credentials already in `.env.example`. It holds
+document and research-comparison metadata; leave it running whenever the backend runs. Data persists
+in a Docker volume across restarts — `docker compose down` stops it, `docker compose down -v` also
+wipes the data.
+
+### Step 4 — Download the local language model (about 2.3 GB, one time)
 
 ```bash
 hf download mlx-community/Qwen3-4B-Instruct-2507-4bit
@@ -106,7 +120,7 @@ instead of an answer.
 The embedding model (`all-MiniLM-L6-v2`, about 90 MB) downloads automatically the first time a
 PDF is processed.
 
-### Step 4 — Install the frontend
+### Step 5 — Install the frontend
 
 ```bash
 cd frontend
@@ -115,7 +129,7 @@ cp .env.example .env               # optional — sets VITE_API_BASE_URL=http://
 cd ..
 ```
 
-### Step 5 (optional) — Load the sample documents
+### Step 6 (optional) — Load the sample documents
 
 ```bash
 python -m backend.app.research.benchmark ingest
@@ -129,8 +143,12 @@ your own PDFs.
 
 ## Running the app (backend + frontend)
 
-The app has two processes, and both must be running. Use two terminal windows, both opened at the
-repository root.
+The app has two processes, and both must be running, plus the Postgres container. Use two terminal
+windows, both opened at the repository root.
+
+```bash
+docker compose up -d   # if it isn't already running
+```
 
 ### Terminal 1 — Backend (FastAPI, port 8000)
 
@@ -202,11 +220,17 @@ pnpm preview                       # serve the build locally
 4. **Search several documents.** Tick more documents in the left sidebar to search them together.
 5. **Change the retrieval depth.** The *Passages per answer* selector under the input box sets
    how many passages are retrieved (1, 3, 5 or 10).
-6. **Compare depths.** On the **Research** page, pick a document, enter a question and click
+6. **Revisit past conversations.** Each document (or document combination) keeps one saved
+   conversation, persisted in Postgres so it survives a backend restart. Switch the left sidebar
+   to the **History** tab to see every saved conversation — title, documents, message count and
+   last-updated time — and click one to reopen it. The trash icon on a row, or the one in the
+   chat header, deletes that conversation. Recent turns in a conversation are also fed back to the
+   model, so follow-up questions ("what about page 2?") can refer to what was just discussed.
+7. **Compare depths.** On the **Research** page, pick a document, enter a question and click
    **Run comparison**. The same question runs at Top-1, 3, 5 and 10, optionally with a
    no-retrieval baseline. Each comparison is saved and can be reopened later.
-7. **Delete a document.** Use the trash icon on the Documents page. This removes the PDF, its
-   extracted text, its passages, its vectors and any saved comparisons that used it.
+8. **Delete a document.** Use the trash icon on the Documents page. This removes the PDF, its
+   extracted text, its passages, its vectors and any saved comparisons or conversations that used it.
 
 How long an answer takes depends mostly on how much text the model has to read. On an M4, Top-5
 takes about 15–20 s and Top-10 about 30–40 s.
@@ -331,7 +355,7 @@ FastAPI backend (port 8000)
    ├─ Retrieve      Top-K passages from the selected documents only
    ├─ Generate      local LLM via MLX (Qwen3-4B-Instruct, 4-bit), loaded once
    └─ Cite          [S1], [S2]… markers mapped back to document + page + excerpt
-Storage: data/contextlens.db (SQLite metadata) + data/documents/<id>/ (PDF, text, chunks, vectors)
+Storage: Postgres (metadata, via Docker) + data/documents/<id>/ (PDF, text, chunks, vectors)
 ```
 
 **Citations.** Each retrieved passage is shown to the model as `[S1]`, `[S2]` and so on, together
@@ -355,8 +379,9 @@ only by the backend and are never sent to the browser.
 | --- | --- | --- |
 | `BACKEND_HOST` / `BACKEND_PORT` | `127.0.0.1` / `8000` | Where the API listens |
 | `FRONTEND_ORIGIN` | `http://localhost:5173,http://127.0.0.1:5173` | Allowed browser origins (CORS) |
-| `DATA_DIR` | `./data` | Where documents, indexes and the database are stored |
+| `DATA_DIR` | `./data` | Where documents and indexes are stored |
 | `RESULTS_DIR` | `./results` | Where benchmark runs are written |
+| `DATABASE_URL` | `postgresql://contextlens:contextlens@localhost:5432/contextlens` | Postgres connection string (matches `docker-compose.yml`) |
 | `MAX_UPLOAD_MB` | `25` | Size limit per PDF |
 | `MAX_FILES_PER_UPLOAD` | `5` | Maximum PDFs in one upload |
 | `CHUNK_SIZE_WORDS` / `CHUNK_OVERLAP_WORDS` | `500` / `80` | Passage size and overlap |
@@ -398,8 +423,11 @@ to re-process them; use the *Retry* button.
 | DELETE | `/api/documents/{id}` | Delete the document and all derived data |
 | POST | `/api/documents/{id}/reprocess` | Retry a failed or interrupted document |
 | GET | `/api/documents/{id}/chunks?offset=0&limit=20` | Browse indexed passages |
-| POST | `/api/chat` | `{"question", "document_ids", "k"}` → answer, citations, passages, timings |
+| POST | `/api/chat` | `{"question", "document_ids", "k"}` → answer, citations, passages, timings. Saves the turn to that document selection's conversation and feeds recent turns back to the model as memory. |
 | POST | `/api/chat/stream` | Same as above, streamed; closing the connection stops generation |
+| GET | `/api/conversations` | List saved conversations (one per document selection), most recently updated first |
+| GET | `/api/conversations/{comma-separated document ids}` | One saved conversation with all its turns |
+| DELETE | `/api/conversations/{comma-separated document ids}` | Delete that conversation |
 | POST | `/api/research/compare` (and `/stream`) | Same question at K = 1, 3, 5, 10, saved |
 | GET | `/api/research/results` | Saved comparisons and benchmark summaries |
 | GET | `/api/research/comparisons/{id}` | One saved comparison |
@@ -420,8 +448,9 @@ Errors always have the form `{"error": {"code": "...", "message": "..."}}`:
 
 - **No OCR.** Scanned or image-only PDFs are rejected with a clear message. Pages without text
   inside an otherwise normal PDF are listed as a warning and are not searchable.
-- **No conversation memory.** Each question is answered on its own. Follow-up questions should
-  name what they refer to.
+- **Conversation memory is shallow.** Each conversation is saved and the last few turns are fed
+  back to the model so follow-ups can refer to what was just discussed, but it isn't a full
+  running summary — very long or meandering threads may still need the subject restated.
 - **Page numbers** are positions in the PDF file (what a PDF viewer's page counter shows), not
   the numbers printed on the pages.
 - **The metrics are word-matching heuristics.** They can miss paraphrases and cannot detect
@@ -432,10 +461,10 @@ Errors always have the form `{"error": {"code": "...", "message": "..."}}`:
 
 ## Privacy
 
-Uploaded PDFs, extracted text, vectors and saved comparisons stay in `data/` on your machine.
-Questions and document text are never sent to an online AI service, and the server does not log
-question text. The internet is used only to download models that are not yet cached. Chat
-history is kept only in your browser's local storage.
+Uploaded PDFs, extracted text and vectors stay in `data/` on your machine; metadata, saved
+comparisons and chat conversations stay in the local Postgres container. Questions and document
+text are never sent to an online AI service, and the server does not log question text. The
+internet is used only to download models that are not yet cached.
 
 ---
 
@@ -462,6 +491,7 @@ ContextLens/
 ├── README.md
 ├── requirements.txt              backend dependencies
 ├── .env.example                  backend settings template
+├── docker-compose.yml            local Postgres (metadata database)
 ├── pytest.ini
 ├── backend/
 │   ├── app/
@@ -471,7 +501,7 @@ ContextLens/
 │   │   ├── container.py          wires the services together
 │   │   ├── api/                  routes: health, documents, chat, research
 │   │   ├── services/             preprocessing, chunking, embedding, retrieval, llm, rag, evaluation, experiments
-│   │   ├── storage/              SQLite metadata store, per-document files
+│   │   ├── storage/              Postgres metadata store, per-document files
 │   │   └── research/benchmark.py benchmark command-line tool
 │   └── tests/                    pytest suite
 ├── frontend/

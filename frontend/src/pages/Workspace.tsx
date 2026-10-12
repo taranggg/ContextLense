@@ -1,25 +1,31 @@
-import { ArrowUp, Library, PanelLeft, Square, Trash2 } from "lucide-react";
+import { ArrowUp, FileText, History, Library, PanelLeft, Square, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ApiError, streamChat } from "../api/client";
-import type { DocumentInfo } from "../api/types";
+import { api, ApiError, streamChat } from "../api/client";
+import type { ConversationSummary, DocumentInfo, SavedTurn } from "../api/types";
 import { Inspector, type InspectorTab } from "../components/Inspector";
 import { Turn, type ChatTurn } from "../components/Turn";
 import { Notice, StatusPill } from "../components/common";
-import { plural } from "../lib/format";
-import { isProcessing, llmUsable, useDocuments, useStoredState } from "../lib/hooks";
+import { formatDate, plural } from "../lib/format";
+import { isProcessing, llmUsable, useConversations, useDocuments, useStoredState } from "../lib/hooks";
 import { useReady } from "../lib/readiness";
 
 const SUGGESTIONS = ["What is this document about?", "What are the key requirements or deadlines?"];
 
-function Chat({ docs, sidebarOpen, onToggleSidebar }: {
+function fromSavedTurn(t: SavedTurn): ChatTurn {
+  return { id: t.id, question: t.question, k: t.k, status: t.status, partial: t.response?.answer ?? "", response: t.response ?? undefined };
+}
+
+function Chat({ docs, sidebarOpen, onToggleSidebar, onConversationChange }: {
   docs: DocumentInfo[];
   sidebarOpen: boolean;
   onToggleSidebar: () => void;
+  onConversationChange: () => void;
 }) {
   const { readiness } = useReady();
-  const storageKey = "contextlens:chat:" + docs.map((d) => d.id).sort().join(",");
-  const [turns, setTurns] = useStoredState<ChatTurn[]>(storageKey, []);
+  const documentIds = useMemo(() => docs.map((d) => d.id), [docs]);
+  const [turns, setTurns] = useState<ChatTurn[]>([]);
+  const [turnsLoaded, setTurnsLoaded] = useState(false);
   const [draft, setDraft] = useState("");
   const [k, setK] = useStoredState<number>("contextlens:k", readiness?.limits.default_top_k ?? 5);
   const [inspector, setInspector] = useState<{ turnId: string | null; focus: string | null; tab: InspectorTab } | null>(null);
@@ -27,12 +33,18 @@ function Chat({ docs, sidebarOpen, onToggleSidebar }: {
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Turns persisted mid-answer (e.g. page reload) cannot resume.
+  // Load this document selection's saved conversation (chat memory) once, on mount.
   useEffect(() => {
-    setTurns((ts) =>
-      ts.map((t) => (t.status === "retrieving" || t.status === "generating" ? { ...t, status: "cancelled" } : t)),
-    );
-    return () => abortRef.current?.abort();
+    let cancelled = false;
+    api
+      .getConversation(documentIds)
+      .then((conv) => !cancelled && setTurns(conv.turns.map(fromSavedTurn)))
+      .catch(() => !cancelled && setTurns([]))
+      .finally(() => !cancelled && setTurnsLoaded(true));
+    return () => {
+      cancelled = true;
+      abortRef.current?.abort();
+    };
   }, []);
 
   const busy = turns.some((t) => t.status === "retrieving" || t.status === "generating");
@@ -62,11 +74,12 @@ function Chat({ docs, sidebarOpen, onToggleSidebar }: {
       if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     });
     try {
-      const response = await streamChat(question, docs.map((d) => d.id), k, controller.signal, {
+      const response = await streamChat(question, documentIds, k, controller.signal, {
         onRetrieved: (retrieved) => update(id, { status: "generating", retrieved }),
         onToken: (text) => update(id, (t) => ({ partial: t.partial + text })),
       });
       update(id, { status: response.cancelled ? "cancelled" : "done", response, partial: response.answer });
+      onConversationChange();
     } catch (err) {
       if ((err as Error).name === "AbortError") update(id, { status: "cancelled" });
       else {
@@ -130,7 +143,10 @@ function Chat({ docs, sidebarOpen, onToggleSidebar }: {
             type="button"
             className="icon-btn"
             disabled={busy}
-            onClick={() => setTurns([])}
+            onClick={() => {
+              setTurns([]);
+              api.deleteConversation(documentIds).then(onConversationChange).catch(() => {});
+            }}
             aria-label="Clear conversation"
             title="Clear conversation"
           >
@@ -140,7 +156,11 @@ function Chat({ docs, sidebarOpen, onToggleSidebar }: {
       </div>
 
       <div className="chat-scroll" ref={scrollRef}>
-        {turns.length === 0 ? (
+        {!turnsLoaded ? (
+          <div className="thinking" style={{ justifyContent: "center", marginTop: 40 }}>
+            <span className="spinner" aria-hidden="true" /> Loading conversation…
+          </div>
+        ) : turns.length === 0 ? (
           <div className="chat-empty">
             <h2>Ask about {docs.length === 1 ? "this document" : "these documents"}.</h2>
             <p>Answers use only the text of {docs.length === 1 ? docs[0].filename : "the selected documents"}, with the passages they come from.</p>
@@ -239,12 +259,59 @@ function Chat({ docs, sidebarOpen, onToggleSidebar }: {
   );
 }
 
+const sameDocs = (a: string[], b: string[]) => [...a].sort().join(",") === [...b].sort().join(",");
+
+function openConversation(navigate: ReturnType<typeof useNavigate>, ids: string[]) {
+  const [first, ...rest] = ids;
+  navigate(`/documents/${first}${rest.length ? `?with=${rest.join(",")}` : ""}`);
+}
+
+function HistoryList({ conversations, activeIds, navigate, onDelete }: {
+  conversations: ConversationSummary[] | null;
+  activeIds: string[];
+  navigate: ReturnType<typeof useNavigate>;
+  onDelete: (ids: string[]) => void;
+}) {
+  if (!conversations) return <p className="empty" style={{ padding: "8px 8px" }}>Loading…</p>;
+  if (conversations.length === 0) return <p className="empty" style={{ padding: "8px 8px" }}>No conversations yet.</p>;
+  return (
+    <>
+      {conversations.map((conv) => {
+        const key = conv.document_ids.join(",");
+        const active = sameDocs(conv.document_ids, activeIds);
+        return (
+          <div key={key} className={`sidebar-doc history-row${active ? " active" : ""}`}>
+            <button type="button" className="history-open" onClick={() => openConversation(navigate, conv.document_ids)}>
+              <span className="name">{conv.title}</span>
+              <span className="meta" style={{ display: "block" }}>
+                {conv.document_names.join(", ")} · {plural(conv.turn_count, "message")} · {formatDate(conv.updated_at)}
+              </span>
+            </button>
+            <button
+              type="button"
+              className="icon-btn"
+              aria-label="Delete conversation"
+              title="Delete conversation"
+              onClick={() => onDelete(conv.document_ids)}
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
 export function Workspace() {
   const { id = "" } = useParams();
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { documents, error } = useDocuments();
+  const { conversations, refresh: refreshConversations } = useConversations();
   const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 860);
+  const [sidebarTab, setSidebarTab] = useStoredState<"documents" | "history">("contextlens:sidebarTab", "documents");
+  const [reloadToken, setReloadToken] = useState(0);
 
   const selectedIds = useMemo(() => {
     const extra = (params.get("with") ?? "").split(",").filter(Boolean);
@@ -259,6 +326,12 @@ export function Workspace() {
     if (!ids.length) return;
     const [first, ...rest] = ids;
     navigate(`/documents/${first}${rest.length ? `?with=${rest.join(",")}` : ""}`, { replace: true });
+  };
+
+  const deleteConversation = async (ids: string[]) => {
+    await api.deleteConversation(ids);
+    refreshConversations();
+    if (sameDocs(ids, selectedIds)) setReloadToken((n) => n + 1);
   };
 
   if (error && !documents) {
@@ -301,42 +374,71 @@ export function Workspace() {
 
   return (
     <div className={`workspace${sidebarOpen ? "" : " sidebar-collapsed"}`}>
-      <aside className="sidebar" aria-label="Documents to search" aria-hidden={!sidebarOpen}>
-        <h2>Search in</h2>
-        {ready.map((doc) => {
-          const checked = selectedIds.includes(doc.id);
-          return (
-            <label key={doc.id} className="sidebar-doc">
-              <input
-                type="checkbox"
-                checked={checked}
-                disabled={checked && selectedIds.length === 1}
-                tabIndex={sidebarOpen ? 0 : -1}
-                onChange={() =>
-                  setSelection(checked ? selectedIds.filter((x) => x !== doc.id) : [...selectedIds, doc.id])
-                }
-              />
-              <span>
-                <span className="name">{doc.filename}</span>
-                <span className="meta" style={{ display: "block" }}>
-                  {plural(doc.page_count ?? 0, "page")}
-                  {doc.is_sample && " · sample"}
-                </span>
-              </span>
-            </label>
-          );
-        })}
-        <div className="sidebar-foot">
-          <Link to="/" className="small" tabIndex={sidebarOpen ? 0 : -1}>
-            Upload another PDF
-          </Link>
+      <aside className="sidebar" aria-label="Documents and conversation history" aria-hidden={!sidebarOpen}>
+        <div className="sidebar-tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={sidebarTab === "documents"}
+            className={`sidebar-tab${sidebarTab === "documents" ? " active" : ""}`}
+            tabIndex={sidebarOpen ? 0 : -1}
+            onClick={() => setSidebarTab("documents")}
+          >
+            <FileText size={14} aria-hidden="true" /> Documents
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={sidebarTab === "history"}
+            className={`sidebar-tab${sidebarTab === "history" ? " active" : ""}`}
+            tabIndex={sidebarOpen ? 0 : -1}
+            onClick={() => setSidebarTab("history")}
+          >
+            <History size={14} aria-hidden="true" /> History
+          </button>
         </div>
+
+        {sidebarTab === "documents" ? (
+          <>
+            {ready.map((doc) => {
+              const checked = selectedIds.includes(doc.id);
+              return (
+                <label key={doc.id} className="sidebar-doc">
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    disabled={checked && selectedIds.length === 1}
+                    tabIndex={sidebarOpen ? 0 : -1}
+                    onChange={() =>
+                      setSelection(checked ? selectedIds.filter((x) => x !== doc.id) : [...selectedIds, doc.id])
+                    }
+                  />
+                  <span>
+                    <span className="name">{doc.filename}</span>
+                    <span className="meta" style={{ display: "block" }}>
+                      {plural(doc.page_count ?? 0, "page")}
+                      {doc.is_sample && " · sample"}
+                    </span>
+                  </span>
+                </label>
+              );
+            })}
+            <div className="sidebar-foot">
+              <Link to="/" className="small" tabIndex={sidebarOpen ? 0 : -1}>
+                Upload another PDF
+              </Link>
+            </div>
+          </>
+        ) : (
+          <HistoryList conversations={conversations} activeIds={selectedIds} navigate={navigate} onDelete={deleteConversation} />
+        )}
       </aside>
       <Chat
-        key={readySelected.map((d) => d.id).sort().join(",")}
+        key={`${readySelected.map((d) => d.id).sort().join(",")}:${reloadToken}`}
         docs={readySelected}
         sidebarOpen={sidebarOpen}
         onToggleSidebar={() => setSidebarOpen((o) => !o)}
+        onConversationChange={refreshConversations}
       />
     </div>
   );

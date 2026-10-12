@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass, field, replace
 from pathlib import Path
+from typing import Optional
 
 from dotenv import load_dotenv
 
@@ -53,6 +54,11 @@ class Settings:
     max_upload_mb: int = 25
     max_files_per_upload: int = 5
 
+    # Database (PostgreSQL; run locally via `docker compose up -d`)
+    database_url: str = "postgresql://contextlens:contextlens@localhost:5432/contextlens"
+    # Dedicated schema instead of "public" — tests use a unique one per run for isolation.
+    database_schema: Optional[str] = None
+
     # Chunking (identical for every K)
     chunk_size_words: int = 500
     chunk_overlap_words: int = 80
@@ -82,13 +88,11 @@ class Settings:
 
     # Derived paths
     documents_dir: Path = field(init=False)
-    db_path: Path = field(init=False)
     benchmark_path: Path = field(init=False)
     samples_dir: Path = field(init=False)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "documents_dir", self.data_dir / "documents")
-        object.__setattr__(self, "db_path", self.data_dir / "contextlens.db")
         object.__setattr__(self, "benchmark_path", self.data_dir / "benchmark" / "ContextLens_Benchmark_50_Questions.json")
         object.__setattr__(self, "samples_dir", self.data_dir / "raw")
 
@@ -120,6 +124,7 @@ def load_settings() -> Settings:
         results_dir=_resolve(_env("RESULTS_DIR", "./results")),
         max_upload_mb=_env_int("MAX_UPLOAD_MB", 25),
         max_files_per_upload=_env_int("MAX_FILES_PER_UPLOAD", 5),
+        database_url=_env("DATABASE_URL", "postgresql://contextlens:contextlens@localhost:5432/contextlens"),
         chunk_size_words=_env_int("CHUNK_SIZE_WORDS", 500),
         chunk_overlap_words=_env_int("CHUNK_OVERLAP_WORDS", 80),
         embedding_model=_env("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"),

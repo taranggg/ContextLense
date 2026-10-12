@@ -205,13 +205,15 @@ class RAGService:
             raise ValueError(f"k must be between 1 and {self.settings.max_top_k}.")
         return k
 
-    def _fit_context(self, question: str, sources: list[RetrievedChunk]) -> tuple[list[dict[str, str]], int, bool]:
+    def _fit_context(
+        self, question: str, sources: list[RetrievedChunk], history: Optional[list[tuple[str, str]]] = None
+    ) -> tuple[list[dict[str, str]], int, bool]:
         """Trim the lowest-ranked sources until the prompt fits the context budget."""
         budget = self.settings.llm_context_tokens - self.settings.llm_max_tokens - 64
         texts = [s.text for s in sources]
         n = len(sources)
         truncated = False
-        messages = build_rag_messages(question, sources[:n], texts[:n])
+        messages = build_rag_messages(question, sources[:n], texts[:n], history)
         tokens = self.llm.count_tokens(messages)
         while tokens > budget and n > 0:
             truncated = True
@@ -222,7 +224,7 @@ class RAGService:
                 n -= 1
             else:
                 texts[n - 1] = " ".join(words[:keep]) + " …"
-            messages = build_rag_messages(question, sources[:n], texts[:n])
+            messages = build_rag_messages(question, sources[:n], texts[:n], history)
             tokens = self.llm.count_tokens(messages)
         if truncated:
             logger.info("Context trimmed to fit %d tokens (%d of %d sources kept)", budget, n, len(sources))
@@ -241,9 +243,10 @@ class RAGService:
         retrieval_ms: float,
         on_token: Optional[Callable[[str], None]] = None,
         should_stop: Optional[Callable[[], bool]] = None,
+        history: Optional[list[tuple[str, str]]] = None,
     ) -> ChatResponse:
         start = time.perf_counter()
-        messages, n_in_prompt, truncated = self._fit_context(question, sources)
+        messages, n_in_prompt, truncated = self._fit_context(question, sources, history)
         result: GenerationResult = self.llm.generate(messages, self.params, on_token=on_token, should_stop=should_stop)
         included = sources[:n_in_prompt]
         citations, invalid = build_citations(result.text, question, included)
@@ -280,13 +283,16 @@ class RAGService:
         on_retrieved: Optional[Callable[[list[RetrievedChunk], float], None]] = None,
         on_token: Optional[Callable[[str], None]] = None,
         should_stop: Optional[Callable[[], bool]] = None,
+        history: Optional[list[tuple[str, str]]] = None,
     ) -> ChatResponse:
         k = self.resolve_k(k)
         self.check_documents(document_ids)
         retrieval = self.retrieve(question, document_ids, k)
         if on_retrieved:
             on_retrieved(retrieval.chunks, retrieval.retrieval_ms)
-        return self.answer_from_sources(question, retrieval.chunks, k, retrieval.retrieval_ms, on_token, should_stop)
+        return self.answer_from_sources(
+            question, retrieval.chunks, k, retrieval.retrieval_ms, on_token, should_stop, history
+        )
 
     def answer_without_context(self, question: str) -> GenerationResult:
         """No-RAG baseline (research only): same model and generation parameters, no sources."""

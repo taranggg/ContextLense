@@ -4,6 +4,8 @@ import type {
   ChunkPage,
   Comparison,
   ConditionResult,
+  Conversation,
+  ConversationSummary,
   DocumentInfo,
   Readiness,
   ResearchResults,
@@ -65,6 +67,10 @@ export const api = {
   researchResults: () => request<ResearchResults>("/api/research/results"),
   comparison: (id: string) => request<Comparison>(`/api/research/comparisons/${id}`),
   benchmarkRun: (id: string) => request<{ summary: unknown; runs: unknown[] }>(`/api/research/benchmark/${id}`),
+  listConversations: () => request<{ conversations: ConversationSummary[] }>("/api/conversations").then((r) => r.conversations),
+  getConversation: (documentIds: string[]) => request<Conversation>(`/api/conversations/${documentIds.join(",")}`),
+  deleteConversation: (documentIds: string[]) =>
+    request<void>(`/api/conversations/${documentIds.join(",")}`, { method: "DELETE" }),
 };
 
 /** Upload several PDFs in one request, with progress (fetch has no upload progress events). */

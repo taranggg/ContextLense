@@ -249,3 +249,52 @@ def test_batch_upload_rejects_more_than_five(client, tmp_path):
     assert r.status_code == 400
     assert r.json()["error"]["code"] == "too_many_files"
     assert client.get("/api/documents").json()["documents"] == []
+
+
+def test_conversation_is_saved_and_listed(client, sample_pdf):
+    doc_id = ready_doc(client, sample_pdf)
+    assert client.post("/api/chat", json={"question": "What is the fee?", "document_ids": [doc_id]}).status_code == 200
+    assert client.post("/api/chat", json={"question": "And the deadline?", "document_ids": [doc_id]}).status_code == 200
+
+    conversations = client.get("/api/conversations").json()["conversations"]
+    assert len(conversations) == 1
+    summary = conversations[0]
+    assert summary["document_ids"] == [doc_id]
+    assert summary["document_names"] == ["handbook.pdf"]
+    assert summary["title"] == "What is the fee?"
+    assert summary["turn_count"] == 2
+
+    conv = client.get(f"/api/conversations/{doc_id}").json()
+    assert [t["question"] for t in conv["turns"]] == ["What is the fee?", "And the deadline?"]
+    assert all(t["status"] == "done" for t in conv["turns"])
+
+
+def test_chat_uses_prior_turns_as_memory(client, sample_pdf, fake_llm):
+    doc_id = ready_doc(client, sample_pdf)
+    client.post("/api/chat", json={"question": "What is the fee?", "document_ids": [doc_id]})
+    client.post("/api/chat", json={"question": "And the deadline?", "document_ids": [doc_id]})
+    messages, _ = fake_llm.calls[-1]
+    assert {"role": "user", "content": "What is the fee?"} in messages
+    assert {"role": "assistant", "content": "The fee is Rs 5000 [S1]."} in messages
+
+
+def test_conversation_not_found_returns_404(client, sample_pdf):
+    doc_id = ready_doc(client, sample_pdf)
+    r = client.get(f"/api/conversations/{doc_id}")
+    assert r.status_code == 404
+    assert r.json()["error"]["code"] == "conversation_not_found"
+
+
+def test_delete_conversation(client, sample_pdf):
+    doc_id = ready_doc(client, sample_pdf)
+    client.post("/api/chat", json={"question": "fee?", "document_ids": [doc_id]})
+    assert client.get("/api/conversations").json()["conversations"]
+    assert client.delete(f"/api/conversations/{doc_id}").status_code == 204
+    assert client.get("/api/conversations").json()["conversations"] == []
+
+
+def test_deleting_document_removes_its_conversation(client, sample_pdf):
+    doc_id = ready_doc(client, sample_pdf)
+    client.post("/api/chat", json={"question": "fee?", "document_ids": [doc_id]})
+    assert client.delete(f"/api/documents/{doc_id}").status_code == 204
+    assert client.get("/api/conversations").json()["conversations"] == []

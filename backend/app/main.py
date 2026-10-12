@@ -17,7 +17,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .api import chat, documents, health, research
+from .api import chat, conversations, documents, health, research
 from .api.errors import error_body, install_error_handlers
 from .config import Settings, load_settings
 from .container import Container, build_container
@@ -76,6 +76,7 @@ def create_app(settings: Optional[Settings] = None, container: Optional[Containe
     app.include_router(health.router)
     app.include_router(documents.router)
     app.include_router(chat.router)
+    app.include_router(conversations.router)
     app.include_router(research.router)
     return app
 

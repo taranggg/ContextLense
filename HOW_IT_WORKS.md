@@ -296,7 +296,7 @@ templated or canned response.
 | PDF validity checks (extension, MIME type, header, opens in PyMuPDF, not encrypted) | `backend/app/services/preprocessing_service.py` → `validate_pdf_upload`, `inspect_pdf` |
 | The extract → chunk → embed → index pipeline | `backend/app/services/document_service.py` → `_process` |
 | Where processed documents live on disk | `backend/app/storage/document_files.py` |
-| Document status/metadata (survives a restart) | `backend/app/storage/metadata_store.py` (SQLite, `data/contextlens.db`) |
+| Document status/metadata (survives a restart) | `backend/app/storage/metadata_store.py` (PostgreSQL, via `docker-compose.yml`) |
 
 ### Chat with a document
 

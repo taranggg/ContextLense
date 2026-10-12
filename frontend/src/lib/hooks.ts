@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, ApiError } from "../api/client";
-import type { DocumentInfo, Readiness } from "../api/types";
+import type { ConversationSummary, DocumentInfo, Readiness } from "../api/types";
 
 export const PROCESSING: DocumentInfo["status"][] = ["queued", "extracting", "chunking", "embedding", "indexing"];
 
@@ -66,6 +66,27 @@ export function useDocuments() {
   }, [refresh]);
 
   return { documents, error, refresh, setDocuments };
+}
+
+/** Saved conversations (chat memory), across all document selections. Refresh after a turn completes. */
+export function useConversations() {
+  const [conversations, setConversations] = useState<ConversationSummary[] | null>(null);
+  const [error, setError] = useState<ApiError | null>(null);
+
+  const refresh = useCallback(async () => {
+    try {
+      setConversations(await api.listConversations());
+      setError(null);
+    } catch (err) {
+      setError(err as ApiError);
+    }
+  }, []);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  return { conversations, error, refresh };
 }
 
 /** Like useState, persisted to localStorage (per-browser convenience only). */
