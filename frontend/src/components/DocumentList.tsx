@@ -36,7 +36,11 @@ function DocumentRow({ doc, onChange }: { doc: DocumentInfo; onChange: () => voi
     <li className="doc-row">
       <div className="doc-row-main">
         <div className="doc-row-title">
-          {doc.status === "ready" ? <Link to={`/documents/${doc.id}`}>{doc.filename}</Link> : <span>{doc.filename}</span>}
+          {doc.status === "ready" ? (
+            <Link className="doc-row-filename" to={`/documents/${doc.id}`}>{doc.filename}</Link>
+          ) : (
+            <span className="doc-row-filename">{doc.filename}</span>
+          )}
           {doc.is_sample && <span className="tag" title="Bundled sample used by the research benchmark">Sample</span>}
         </div>
         <div className="doc-row-meta">

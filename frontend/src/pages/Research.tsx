@@ -1,4 +1,4 @@
-import { Check, ChevronRight, CircleHelp, Play, Square } from "lucide-react";
+import { ChevronRight, CircleHelp, Play, Search, Square, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { api, ApiError, streamCompare } from "../api/client";
 import type {
@@ -145,6 +145,7 @@ function LiveCompare({ documents, onSaved, loaded }: { documents: DocumentInfo[]
   const { readiness } = useReady();
   const ready = documents.filter((d) => d.status === "ready");
   const [selected, setSelected] = useState<string[]>([]);
+  const [docFilter, setDocFilter] = useState("");
   const [question, setQuestion] = useState("");
   const [includeNoRag, setIncludeNoRag] = useState(false);
   const [planned, setPlanned] = useState<string[]>([]);
@@ -198,6 +199,12 @@ function LiveCompare({ documents, onSaved, loaded }: { documents: DocumentInfo[]
 
   const canRun = !running && question.trim().length > 0 && selected.length > 0 && llmUsable(readiness);
 
+  const filteredReady = useMemo(() => {
+    const q = docFilter.trim().toLowerCase();
+    if (!q) return ready;
+    return ready.filter((d) => d.filename.toLowerCase().includes(q));
+  }, [ready, docFilter]);
+
   return (
     <section className="section" aria-labelledby="compare-title">
       <div className="section-head">
@@ -207,27 +214,75 @@ function LiveCompare({ documents, onSaved, loaded }: { documents: DocumentInfo[]
       </div>
       <div className="panel">
         <div className="form-row">
-          <span className="field-label" id="docs-label">
-            Documents
-          </span>
+          <div className="doc-picker-head">
+            <span className="field-label" id="docs-label" style={{ marginBottom: 0 }}>
+              Documents
+            </span>
+            <span className="small muted">
+              {selected.length} selected of {ready.length}
+            </span>
+          </div>
           {ready.length ? (
-            <div className="chip-select" role="group" aria-labelledby="docs-label">
-              {ready.map((d) => {
-                const on = selected.includes(d.id);
-                return (
+            <div className="doc-picker">
+              <div className="doc-picker-toolbar">
+                <div className="doc-picker-search">
+                  <Search size={14} aria-hidden="true" />
+                  <input
+                    type="text"
+                    value={docFilter}
+                    onChange={(e) => setDocFilter(e.target.value)}
+                    placeholder={`Filter ${ready.length} document${ready.length === 1 ? "" : "s"}…`}
+                    aria-label="Filter documents"
+                    disabled={running}
+                  />
+                  {docFilter && (
+                    <button type="button" className="doc-picker-clear-filter" onClick={() => setDocFilter("")} aria-label="Clear filter">
+                      <X size={13} aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
+                <div className="doc-picker-bulk">
                   <button
-                    key={d.id}
                     type="button"
-                    className="chip"
-                    aria-pressed={on}
-                    disabled={running || (on && selected.length === 1)}
-                    onClick={() => setSelected(on ? selected.filter((x) => x !== d.id) : [...selected, d.id])}
+                    className="link-btn"
+                    disabled={running || filteredReady.length === 0 || filteredReady.every((d) => selected.includes(d.id))}
+                    onClick={() => setSelected([...new Set([...selected, ...filteredReady.map((d) => d.id)])])}
                   >
-                    {on && <Check size={13} aria-hidden="true" />}
-                    <span>{d.filename}</span>
+                    Select {docFilter ? "shown" : "all"}
                   </button>
-                );
-              })}
+                  <button
+                    type="button"
+                    className="link-btn"
+                    disabled={running || selected.length === 0}
+                    onClick={() => setSelected(docFilter ? selected.filter((id) => !filteredReady.some((d) => d.id === id)) : [])}
+                  >
+                    Clear {docFilter ? "shown" : "all"}
+                  </button>
+                </div>
+              </div>
+              <ul className="doc-picker-list" role="group" aria-labelledby="docs-label">
+                {filteredReady.length === 0 ? (
+                  <li className="doc-picker-empty muted small">No documents match "{docFilter}".</li>
+                ) : (
+                  filteredReady.map((d) => {
+                    const on = selected.includes(d.id);
+                    return (
+                      <li key={d.id}>
+                        <label className={`doc-picker-row${on ? " on" : ""}`}>
+                          <input
+                            type="checkbox"
+                            checked={on}
+                            disabled={running || (on && selected.length === 1)}
+                            onChange={() => setSelected(on ? selected.filter((x) => x !== d.id) : [...selected, d.id])}
+                          />
+                          <span className="doc-picker-filename">{d.filename}</span>
+                          {d.is_sample && <span className="tag">Sample</span>}
+                        </label>
+                      </li>
+                    );
+                  })
+                )}
+              </ul>
             </div>
           ) : (
             <p className="muted small">Upload a PDF first — there are no ready documents.</p>
